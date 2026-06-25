@@ -44,20 +44,25 @@
   .fbtn.active.f-crit  { background: var(--crit); }
   .fbtn.active.f-dep   { background: #EF4444; }
   .fbtn.active.f-prop  { background: #10B981; }
+  .fbtn.active.f-block { background: #7C3AED; }
   .fdot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
-  /* Sub-toggle for dep mode */
   .sub-toggle { display: none; align-items: center; gap: 6px; margin-bottom: 10px; padding: 8px 12px; background: var(--surface); border: 1px solid rgba(239,68,68,0.2); border-radius: 8px; }
+  .sub-toggle.block-toggle { border-color: rgba(124,58,237,0.25); }
+  .sub-toggle.block-toggle { border-color: rgba(124,58,237,0.25); }
   .sub-toggle.visible { display: flex; }
   .stbtn { font-family: var(--mono); font-size: 11px; font-weight: 500; padding: 4px 12px; border-radius: 5px; border: 1px solid var(--border2); background: transparent; color: var(--muted); cursor: pointer; transition: all 0.12s; }
   .stbtn.active { background: #EF4444; color: #fff; border-color: transparent; }
-  .stbtn.active.green { background: #10B981; }
+  .stbtn.active.green  { background: #10B981; }
+  .stbtn.active.purple { background: #7C3AED; }
+  .stbtn.active.purple { background: #7C3AED; }
   .st-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-right: 4px; }
 
   .mode-banner { display: none; align-items: center; gap: 10px; padding: 7px 13px; border-radius: 7px; margin-bottom: 10px; font-size: 11px; font-family: var(--mono); }
   .mode-banner.visible { display: flex; }
-  .mode-banner.dep  { background: rgba(239,68,68,0.07); border: 1px solid rgba(239,68,68,0.18); color: #B91C1C; }
-  .mode-banner.prop { background: rgba(16,185,129,0.07); border: 1px solid rgba(16,185,129,0.18); color: #065F46; }
+  .mode-banner.dep   { background: rgba(239,68,68,0.07); border: 1px solid rgba(239,68,68,0.18); color: #B91C1C; }
+  .mode-banner.prop  { background: rgba(16,185,129,0.07); border: 1px solid rgba(16,185,129,0.18); color: #065F46; }
+  .mode-banner.block { background: rgba(124,58,237,0.07); border: 1px solid rgba(124,58,237,0.2); color: #4C1D95; }
   .bdot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 
   .gantt-container { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
@@ -71,6 +76,8 @@
   thead th.th-day.wk { border-left: 1px solid var(--border2); }
   thead th.th-day.is-dead { background: var(--dead-bg); border-left: 2px solid var(--dead-line); }
   thead th.th-day.is-dead .dnum { color: #EF4444; font-weight: 700; }
+  thead th.th-day.is-block-day { background: rgba(124,58,237,0.07); border-left: 2px solid rgba(124,58,237,0.4); }
+  thead th.th-day.is-block-day .dnum { color: #7C3AED; font-weight: 700; }
   .dnum { display: block; font-family: var(--mono); font-size: 8px; color: var(--faint); }
 
   tr.sec-row td { padding: 10px 16px 4px; font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; color: var(--alegra-dk); border-top: 1px solid var(--border); background: var(--alegra-lt); }
@@ -89,6 +96,8 @@
   tr.task-row.issue-missing     { background: rgba(245,158,11,0.05); }
   tr.task-row.issue-fixed       { background: rgba(16,185,129,0.05); }
   tr.task-row.prop-changed      { background: rgba(16,185,129,0.05); }
+  tr.task-row.block-shifted     { background: rgba(124,58,237,0.05); }
+  tr.task-row.block-origin      { background: rgba(239,68,68,0.05); }
 
   .tlabel { padding: 0 10px 0 16px; overflow: hidden; }
   .tname { font-size: 12px; font-weight: 400; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -99,10 +108,12 @@
   .itag.mis  { color: #92400E; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.28); }
   .itag.fix  { color: #065F46; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.28); }
   .itag.crd  { color: #1D4ED8; background: rgba(99,102,241,0.10); border: 1px solid rgba(99,102,241,0.25); }
+  .itag.blk  { color: #4C1D95; background: rgba(124,58,237,0.10); border: 1px solid rgba(124,58,237,0.25); }
   .ptag { display: inline-block; font-family: var(--mono); font-size: 8px; font-weight: 600; color: #065F46; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.28); padding: 1px 5px; border-radius: 3px; margin-left: 5px; vertical-align: middle; }
 
   td.bcell-empty { background: transparent; }
-  td.bcell-empty.is-dead { background: var(--dead-bg); border-left: 2px solid var(--dead-line); }
+  td.bcell-empty.is-dead  { background: var(--dead-bg); border-left: 2px solid var(--dead-line); }
+  td.bcell-empty.is-block { background: rgba(124,58,237,0.07); border-left: 2px solid rgba(124,58,237,0.35); }
   td.bcell-bar { padding: 0; position: relative; vertical-align: middle; cursor: pointer; }
   td.bcell-bar::before { content: ''; position: absolute; top: 9px; bottom: 9px; left: 0; right: 0; transition: filter 0.12s, top 0.1s, bottom 0.1s; }
   td.bcell-bar:hover::before { top: 7px; bottom: 7px; filter: brightness(1.08); }
@@ -115,8 +126,11 @@
   td.bcell-bar.bar-pro::before   { background: var(--pro); }
   td.bcell-bar.bar-crit::before  { background: var(--crit); box-shadow: 0 0 8px rgba(245,158,11,0.3); }
   td.bcell-bar.bar-prop::before  { background: #10B981; box-shadow: 0 0 8px rgba(16,185,129,0.3); }
+  td.bcell-bar.bar-block::before { background: #7C3AED; box-shadow: 0 0 8px rgba(124,58,237,0.3); }
   td.bcell-bar.bar-ov::before    { background: repeating-linear-gradient(-45deg, rgba(239,68,68,0.6), rgba(239,68,68,0.6) 3px, rgba(239,68,68,0.15) 3px, rgba(239,68,68,0.15) 7px); border-radius: 0 4px 4px 0; right: 2px; }
-  td.bcell-bar.is-dead-bar { border-left: 2px solid var(--dead-line); }
+  td.bcell-bar.bar-ov-block::before { background: repeating-linear-gradient(-45deg, rgba(124,58,237,0.5), rgba(124,58,237,0.5) 3px, rgba(124,58,237,0.15) 3px, rgba(124,58,237,0.15) 7px); border-radius: 0 4px 4px 0; right: 2px; }
+  td.bcell-bar.is-dead-bar  { border-left: 2px solid var(--dead-line); }
+  td.bcell-bar.is-block-bar { border-left: 2px solid rgba(124,58,237,0.4); }
 
   #tooltip { position: fixed; background: var(--surface); border: 1px solid var(--border2); border-radius: 8px; padding: 12px 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.12); font-size: 12px; min-width: 215px; max-width: 295px; z-index: 1000; pointer-events: none; opacity: 0; transition: opacity 0.15s; }
   #tooltip.visible { opacity: 1; }
@@ -130,18 +144,62 @@
   .tt-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
   .tt-none { font-size: 11px; color: var(--muted); font-style: italic; }
   .tt-note { margin-top: 7px; padding: 6px 9px; border-radius: 5px; font-size: 11px; line-height: 1.4; }
-  .tt-note.red   { background: rgba(239,68,68,0.07); border: 1px solid rgba(239,68,68,0.18); color: #B91C1C; }
-  .tt-note.amber { background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.18); color: #92400E; }
-  .tt-note.green { background: rgba(16,185,129,0.07); border: 1px solid rgba(16,185,129,0.18); color: #065F46; }
-  .tt-note.blue  { background: rgba(99,102,241,0.07); border: 1px solid rgba(99,102,241,0.2); color: #3730A3; }
+  .tt-note.red    { background: rgba(239,68,68,0.07); border: 1px solid rgba(239,68,68,0.18); color: #B91C1C; }
+  .tt-note.amber  { background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.18); color: #92400E; }
+  .tt-note.green  { background: rgba(16,185,129,0.07); border: 1px solid rgba(16,185,129,0.18); color: #065F46; }
+  .tt-note.blue   { background: rgba(99,102,241,0.07); border: 1px solid rgba(99,102,241,0.2); color: #3730A3; }
+  .tt-note.purple { background: rgba(124,58,237,0.07); border: 1px solid rgba(124,58,237,0.2); color: #4C1D95; }
 
+  .milestone-header { position: relative; height: 0; overflow: visible; margin-bottom: 0; }
+  .mh-item { position: absolute; display: flex; align-items: center; gap: 5px; transform: translateY(-100%); padding-bottom: 4px; }
+  .mh-line { width: 2px; height: 14px; flex-shrink: 0; }
+  .mh-line.m-review { background: #F59E0B; }
+  .mh-line.m-decide { background: #EF4444; }
+  .mh-line.m-report { background: #7C3AED; }
+  .mh-label { font-family: var(--mono); font-size: 9px; font-weight: 600; white-space: nowrap; padding: 2px 6px; border-radius: 3px; letter-spacing: 0.02em; }
+  .mh-label.m-review { color: #92400E; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); }
+  .mh-label.m-decide { color: #B91C1C; background: rgba(239,68,68,0.10); border: 1px solid rgba(239,68,68,0.25); }
+  .mh-label.m-report { color: #4C1D95; background: rgba(124,58,237,0.10); border: 1px solid rgba(124,58,237,0.25); }
+  .gantt-wrapper { position: relative; }
+  .milestone-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+  .milestone-line { position: absolute; top: 0; bottom: 0; width: 0; border-left: 2px dashed; opacity: 0.7; }
+  .milestone-line.m-review  { border-color: #F59E0B; }
+  .milestone-line.m-decide  { border-color: #EF4444; }
+  .milestone-line.m-report  { border-color: #7C3AED; }
+  .milestone-label { position: absolute; font-family: var(--mono); font-size: 9px; font-weight: 600; white-space: nowrap; padding: 2px 6px; border-radius: 3px; letter-spacing: 0.02em; }
+  .milestone-label.m-review { color: #92400E; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); }
+  .milestone-label.m-decide { color: #B91C1C; background: rgba(239,68,68,0.10); border: 1px solid rgba(239,68,68,0.25); }
+  .milestone-label.m-report { color: #4C1D95; background: rgba(124,58,237,0.10); border: 1px solid rgba(124,58,237,0.25); }
+  .milestone-header { position: relative; height: 0; overflow: visible; margin-bottom: 0; }
+  .mh-item { position: absolute; display: flex; align-items: center; gap: 5px; transform: translateY(-100%); padding-bottom: 4px; }
+  .mh-line { width: 2px; height: 14px; flex-shrink: 0; }
+  .mh-line.m-review { background: #F59E0B; }
+  .mh-line.m-decide { background: #EF4444; }
+  .mh-line.m-report { background: #7C3AED; }
+  .mh-label { font-family: var(--mono); font-size: 9px; font-weight: 600; white-space: nowrap; padding: 2px 6px; border-radius: 3px; letter-spacing: 0.02em; }
+  .mh-label.m-review { color: #92400E; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); }
+  .mh-label.m-decide { color: #B91C1C; background: rgba(239,68,68,0.10); border: 1px solid rgba(239,68,68,0.25); }
+  .mh-label.m-report { color: #4C1D95; background: rgba(124,58,237,0.10); border: 1px solid rgba(124,58,237,0.25); }
+  .gantt-wrapper { position: relative; }
+  .milestone-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+  .milestone-line { position: absolute; top: 0; bottom: 0; width: 0; border-left: 2px dashed; opacity: 0.75; }
+  .milestone-line.m-review { border-color: #F59E0B; }
+  .milestone-line.m-decide { border-color: #EF4444; }
+  .milestone-line.m-report { border-color: #7C3AED; }
+  .milestone-label { position: absolute; font-family: var(--mono); font-size: 9px; font-weight: 600; white-space: nowrap; padding: 2px 6px; border-radius: 3px; letter-spacing: 0.02em; }
+  .milestone-label.m-review { color: #92400E; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); }
+  .milestone-label.m-decide { color: #B91C1C; background: rgba(239,68,68,0.10); border: 1px solid rgba(239,68,68,0.25); }
+  .milestone-label.m-report { color: #4C1D95; background: rgba(124,58,237,0.10); border: 1px solid rgba(124,58,237,0.25); }
   .insight-row { margin-top: 14px; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
   .icard { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 13px 15px; transition: border-color 0.2s; }
-  .icard.green-card { border-color: rgba(16,185,129,0.3); }
+  .icard.green-card  { border-color: rgba(16,185,129,0.3); }
+  .icard.purple-card { border-color: rgba(124,58,237,0.3); }
   .ilbl { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
   .ival { font-size: 19px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; }
   .isub { font-size: 11px; color: var(--muted); margin-top: 3px; }
-  .vred { color: #DC2626; } .vamber { color: #D97706; } .vteal { color: var(--alegra-dk); } .vgreen { color: #059669; }
+  .vred    { color: #DC2626; } .vamber { color: #D97706; }
+  .vteal   { color: var(--alegra-dk); } .vgreen { color: #059669; }
+  .vpurple { color: #6D28D9; }
 </style>
 </head>
 <body>
@@ -171,30 +229,51 @@
   <button class="fbtn f-crit" onclick="setTeam('crit')"><span class="fdot" style="background:var(--crit)"></span>Ruta crítica</button>
   <div class="filter-sep"></div>
   <span class="filter-label">Análisis:</span>
-  <button class="fbtn f-dep"  onclick="setMode('dep')"><span class="fdot" style="background:#EF4444"></span>Dependencias</button>
-  <button class="fbtn f-prop" onclick="setMode('prop')"><span class="fdot" style="background:#10B981"></span>Propuesta 29 días</button>
+  <button class="fbtn f-dep"   onclick="setMode('dep')"><span class="fdot" style="background:#EF4444"></span>Dependencias</button>
+  <button class="fbtn f-prop"  onclick="setMode('prop')"><span class="fdot" style="background:#10B981"></span>Propuesta 29 días</button>
+  <button class="fbtn f-block" onclick="setMode('block')"><span class="fdot" style="background:#7C3AED"></span>Bloqueo día 8</button>
 </div>
 
-<!-- Sub-toggle: only visible in dep mode -->
 <div class="sub-toggle" id="sub-toggle">
   <span class="st-label">Vista:</span>
   <button class="stbtn active" id="st-current" onclick="setDepView('current')">Estado actual</button>
-  <button class="stbtn" id="st-fixed" onclick="setDepView('fixed')">Con correcciónes</button>
+  <button class="stbtn" id="st-fixed" onclick="setDepView('fixed')">Con correcciones</button>
+</div>
+<div class="sub-toggle block-toggle" id="sub-toggle-block">
+  <span class="st-label">Vista:</span>
+  <button class="stbtn active" id="st-block-impact" onclick="setBlockView('impact')">Impacto del bloqueo</button>
+  <button class="stbtn" id="st-block-mgmt" onclick="setBlockView('mgmt')">Gestión del bloqueo</button>
+</div>
+<div class="sub-toggle block-toggle" id="sub-toggle-block">
+  <span class="st-label">Vista:</span>
+  <button class="stbtn active" id="st-block-impact" onclick="setBlockView('impact')">Impacto del bloqueo</button>
+  <button class="stbtn" id="st-block-mgmt" onclick="setBlockView('mgmt')">Gestión del bloqueo</button>
 </div>
 
-<div class="mode-banner dep" id="banner-dep">
+<div class="mode-banner dep"   id="banner-dep">
   <span class="bdot" style="background:#EF4444"></span>
   <span id="banner-dep-text"><strong>rojo</strong>: dep. innecesaria &nbsp;|&nbsp; <strong>naranja</strong>: dep. faltante — Haz click en una barra para ver el detalle</span>
 </div>
-<div class="mode-banner prop" id="banner-prop">
+<div class="mode-banner prop"  id="banner-prop">
   <span class="bdot" style="background:#10B981"></span>
   <span>Solapamiento I→II, II→III y III→V (1 día c/u) — entrega día <strong>29</strong>, margen de <strong>1 día</strong> antes del deadline</span>
 </div>
+<div class="mode-banner block" id="banner-block">
+  <span class="bdot" style="background:#7C3AED"></span>
+  <span>Día 8: T1 se retrasa 6 días (termina día 16). Impacto en cadena sobre 6 tareas — entrega se mueve de <strong>día 32</strong> a <strong>día 35</strong></span>
+</div>
 
+<div class="gantt-wrapper" id="gantt-wrapper">
+<div class="milestone-header" id="milestone-header"></div>
+<div class="gantt-wrapper" id="gantt-wrapper">
 <div class="gantt-container">
-  <div class="gantt-scroll">
+  <div class="gantt-scroll" id="gantt-scroll">
     <table id="gtable"></table>
   </div>
+</div>
+<div class="milestone-overlay" id="milestone-overlay"></div>
+</div>
+<div class="milestone-overlay" id="milestone-overlay"></div>
 </div>
 
 <div class="insight-row">
@@ -223,11 +302,10 @@
 <div id="tooltip"></div>
 
 <script>
-const DAYS = 32, DEAD = 30;
+const DAYS = 35, DEAD = 30, BLOCK_DAY = 8;
 const TC = { mkt:'#1DBBAC', ven:'#6366F1', pro:'#F43F5E', crit:'#F59E0B' };
 const TL = { mkt:'Marketing', ven:'Ventas', pro:'Producto' };
 
-// ── DATA ──────────────────────────────────────────────────
 const tasks = [
   { section:'Marketing' },
   { id:'T1',  label:'1. Determinación de mensajes clave',                      team:'mkt', start:1,  end:10, crítical:true,  deps:[] },
@@ -248,7 +326,6 @@ const tasks = [
   { id:'V',   label:'V. QA y lanzamiento del desarrollo',                      team:'pro', start:28, end:32, crítical:true,  deps:['III'] },
 ];
 
-// Dependency issues — current state
 const depIssues = {
   C:  { type:'unnecessary', note:'Depende de T1 (mensajes clave) pero el entrenamiento cubre metodología y proceso, no mensajes. Deberia depender de A (playbook actualizado). Arranca día 14 en lugar de día 11.' },
   B:  { type:'unnecessary', note:'Depende de T2 (assets graficos) pero el contenido viene de los mensajes clave (T1). Con T1 como única dependencia, B puede arrancar el día 11 en lugar del día 16.' },
@@ -256,7 +333,6 @@ const depIssues = {
   T3: { type:'coord',       note:'Configurar campañas (día 17) no implica activarlas. No es un bloqueo de secuencia, sino una dependencia de coordinación: T3 debe estar informada del lanzamiento (V) para activar campañas en el momento correcto, no antes.' },
 };
 
-// Fixed state (dep corrections applied)
 const depFixed = {
   C:  { start:14, end:20, deps:['A'],       note:'Ahora depende de A (playbook). Arranca día 14 una vez el playbook esta listo.' },
   B:  { start:11, end:15, deps:['T1'],      note:'Dependencia con T2 eliminada. Arranca día 11, gana 5 días de margen.' },
@@ -264,14 +340,27 @@ const depFixed = {
   T3: { start:16, end:17, deps:['T2','T5'], note:'Sin reposición de barra. Se agrega nota de coordinación: campañas configuradas el día 17 deben activarse coordinadas con el lanzamiento (V), no de forma independiente.' },
 };
 
-// Proposal schedule
 const proposal = {
   II:  { start:20, end:21, note:'Inicia 1 día antes (solapamiento con I). Aprobación con prototipo al 90%.' },
   III: { start:21, end:25, note:'Inicia 1 día antes (solapamiento con II). Desarrollo arranca con aprobación en curso.' },
   V:   { start:25, end:29, note:'Entrega día 29, margen de 1 día. QA inicia con desarrollo sustancialmente completo.' },
 };
 
-// Build lookup
+// Bloqueo: T1 retrasa 6 días → termina día 16. Todo lo que depende de T1 se corre 6 días.
+const blockScenario = {
+  T1:  { start:1,  end:16, note:'Retraso de 6 días detectado en día 8. Termina día 16 en lugar de día 10. Origen del impacto en cadena.' },
+  T2:  { start:17, end:21, note:'Desplazada +6 días por retraso de T1.' },
+  T3:  { start:22, end:23, note:'Desplazada +6 días. Depende de T2 y T5 — T2 es el bloqueador.' },
+  A:   { start:17, end:19, note:'Desplazada +6 días por retraso de T1.' },
+  C:   { start:17, end:23, note:'Desplazada +6 días por retraso de T1.' },
+  B:   { start:22, end:26, note:'Desplazada +6 días. Depende de T2, que a su vez depende de T1.' },
+  IV:  { start:17, end:19, note:'Desplazada +6 días por retraso de T1.' },
+  I:   { start:17, end:26, note:'Desplazada +6 días por retraso de T1. Impacto crítico: bloquea toda la cadena de Producto.' },
+  II:  { start:27, end:28, note:'Desplazada +6 días por retraso en cadena de I.' },
+  III: { start:29, end:33, note:'Desplazada +6 días. Excede el deadline del día 30.' },
+  V:   { start:34, end:35, note:'Entrega final: día 35. Desviación total de +5 días sobre el plazo pactado.' },
+};
+
 const taskById = {};
 tasks.forEach(t => { if(t.id) taskById[t.id] = t; });
 const unlockedBy = {};
@@ -280,11 +369,9 @@ tasks.forEach(t => {
   (t.deps||[]).forEach(d => { if(!unlockedBy[d]) unlockedBy[d]=[]; unlockedBy[d].push(t.id); });
 });
 
-// State
 let teamFilter = 'all', mode = 'normal', depView = 'current';
 const rowByTaskId = {}, rowMeta = [];
 
-// ── BUILD TABLE ───────────────────────────────────────────
 const table = document.getElementById('gtable');
 const thead = document.createElement('thead');
 const hrow  = document.createElement('tr');
@@ -293,7 +380,10 @@ thL.className = 'th-label'; thL.textContent = 'Tarea';
 hrow.appendChild(thL);
 for(let d=1;d<=DAYS;d++){
   const th = document.createElement('th');
-  th.className = 'th-day'+(d===DEAD?' is-dead':'')+(d%7===1?' wk':'');
+  th.className = 'th-day'
+    + (d===DEAD      ? ' is-dead'      : '')
+    + (d===BLOCK_DAY ? ' is-block-day' : '')
+    + (d%7===1       ? ' wk'           : '');
   th.innerHTML = `<span class="dnum">${d}</span>`;
   hrow.appendChild(th);
 }
@@ -313,44 +403,51 @@ tasks.forEach(t => {
   const lTd = document.createElement('td'); lTd.className='tlabel';
   lTd.innerHTML=`<div class="tname" id="tn-${t.id}">${t.label}${t.crítical?'<span class="ctag">crítica</span>':''}</div><div class="tmeta" id="tm-${t.id}">D${t.start}–D${t.end} &middot; ${t.deps.length?'dep. '+t.deps.join(', '):'sin dependencia'}</div>`;
   tr.appendChild(lTd);
-  buildBars(tr, t.start, t.end, t.crítical?'bar-crit':'bar-'+t.team, t);
+  buildBars(tr, t.start, t.end, t.crítical?'bar-crit':'bar-'+t.team, t, false, false);
   tbody.appendChild(tr);
   rowMeta.push({el:tr, team:t.team, crítical:t.crítical, id:t.id, isSec:false});
 });
 table.appendChild(tbody);
 
-// ── BAR BUILDER ───────────────────────────────────────────
-function buildBars(tr, s, e, color, t){
+function buildBars(tr, s, e, color, t, isBlock, showDeadline){
   while(tr.cells.length>1) tr.deleteCell(1);
   const cross = e>DEAD;
+  const blockLine = isBlock ? BLOCK_DAY : null;
 
-  function emptyCell(span, dead){
+  function emptyCell(span, deadCol, blockCol){
+    if(span <= 0) return;
     const td=document.createElement('td');
-    td.colSpan=span; td.className='bcell-empty'+(dead?' is-dead':'');
+    td.colSpan=span;
+    td.className='bcell-empty'+(deadCol?' is-dead':blockCol?' is-block':'');
     tr.appendChild(td);
   }
   function barCell(span, cls, taskRef, s2, e2){
+    if(span <= 0) return;
     const td=document.createElement('td');
     td.colSpan=span; td.className='bcell-bar '+cls;
-    if(s2<=DEAD&&e2>=DEAD) td.classList.add('is-dead-bar');
+    if(!isBlock && s2<=DEAD && e2>=DEAD) td.classList.add('is-dead-bar');
+    if(isBlock && s2<=BLOCK_DAY && e2>=BLOCK_DAY) td.classList.add('is-block-bar');
     td.addEventListener('click',ev=>{ev.stopPropagation();showTT(taskRef,ev);highlightTask(taskRef);});
-    tr.appendChild(td); return td;
+    tr.appendChild(td);
   }
 
-  // Before bar
+  // Before bar — check if DEAD or BLOCK_DAY falls in empty space
+  const specialDay = (isBlock && !showDeadline) ? null : DEAD;
   if(s>1){
-    if(DEAD>=1&&DEAD<s){
-      if(DEAD>1) emptyCell(DEAD-1,false);
-      emptyCell(1,true);
-      const r=s-DEAD-1; if(r>0) emptyCell(r,false);
-    } else emptyCell(s-1,false);
+    if(!isBlock && specialDay && specialDay>=1 && specialDay<s){
+      if(specialDay>1) emptyCell(specialDay-1,false,false);
+      emptyCell(1,true,false);
+      const r=s-specialDay-1; if(r>0) emptyCell(r,false,false);
+    } else {
+      emptyCell(s-1,false,false);
+    }
   }
 
-  // Bar
-  if(cross){
+  // Bar itself
+  if((!isBlock || showDeadline) && cross){
     const sp1=DEAD-s+1, sp2=e-DEAD;
-    barCell(sp1, color+' '+(sp1===1?'bar-solo':'bar-start'), t, s, DEAD);
-    barCell(sp2, 'bar-ov bar-end', t, DEAD+1, e);
+    if(sp1>0) barCell(sp1, color+' '+(sp1===1?'bar-solo':'bar-start'), t, s, DEAD);
+    if(sp2>0) barCell(sp2, 'bar-ov bar-end', t, DEAD+1, e);
   } else {
     const sp=e-s+1;
     barCell(sp, color+' '+(sp===1?'bar-solo':'bar-start bar-end'), t, s, e);
@@ -359,27 +456,30 @@ function buildBars(tr, s, e, color, t){
   // After bar
   const ed=Math.min(e,DAYS);
   if(ed<DAYS){
-    if(DEAD>ed&&DEAD<=DAYS){
-      const pre=DEAD-ed-1; if(pre>0) emptyCell(pre,false);
-      emptyCell(1,true);
-      const post=DAYS-DEAD; if(post>0) emptyCell(post,false);
-    } else emptyCell(DAYS-ed,false);
+    if((!isBlock || showDeadline) && specialDay && specialDay>ed && specialDay<=DAYS){
+      const pre=specialDay-ed-1; if(pre>0) emptyCell(pre,false,false);
+      emptyCell(1,true,false);
+      const post=DAYS-specialDay; if(post>0) emptyCell(post,false,false);
+    } else {
+      emptyCell(DAYS-ed,false,false);
+    }
   }
 }
 
-// ── TOOLTIP ───────────────────────────────────────────────
 const ttEl = document.getElementById('tooltip');
 function showTT(t, ev){
-  const isFixed = mode==='dep' && depView==='fixed';
-  const isProp  = mode==='prop';
-  const fixData = depFixed[t.id];
-  const propData= proposal[t.id];
+  const isFixed  = mode==='dep' && depView==='fixed';
+  const isProp   = mode==='prop';
+  const isBlock  = mode==='block';
+  const fixData  = depFixed[t.id];
+  const propData = proposal[t.id];
+  const blkData  = blockScenario[t.id];
 
-  const useStart = isProp&&propData ? propData.start : (isFixed&&fixData ? fixData.start : t.start);
-  const useEnd   = isProp&&propData ? propData.end   : (isFixed&&fixData ? fixData.end   : t.end);
-  const useDeps  = isFixed&&fixData ? fixData.deps   : t.deps;
+  const useStart = isProp&&propData ? propData.start : isFixed&&fixData ? fixData.start : isBlock&&blkData ? blkData.start : t.start;
+  const useEnd   = isProp&&propData ? propData.end   : isFixed&&fixData ? fixData.end   : isBlock&&blkData ? blkData.end   : t.end;
+  const useDeps  = isFixed&&fixData ? fixData.deps : t.deps;
   const dur      = useEnd-useStart+1;
-  const c        = mode==='prop'&&propData ? '#10B981' : (t.crítical?'#F59E0B':TC[t.team]);
+  const c        = isProp&&propData ? '#10B981' : isBlock&&blkData ? '#7C3AED' : (t.crítical?'#F59E0B':TC[t.team]);
 
   const depItems = useDeps.length
     ? useDeps.map(d=>{ const dt=taskById[d]; const dc=dt?(dt.crítical?'#F59E0B':TC[dt.team]):'#999';
@@ -393,14 +493,16 @@ function showTT(t, ev){
     : `<div class="tt-none">No desbloquea ninguna tarea</div>`;
 
   let noteHtml='';
-  if(mode==='dep' && depView==='current' && depIssues[t.id]){
+  if(isBlock && blkData){
+    noteHtml=`<div class="tt-note purple"><strong>Impacto del bloqueo:</strong> ${blkData.note}</div>`;
+  } else if(mode==='dep' && depView==='current' && depIssues[t.id]){
     const iss=depIssues[t.id];
     const cls=iss.type==='unnecessary'?'red':iss.type==='coord'?'blue':'amber';
     const lbl=iss.type==='unnecessary'?'Dependencia innecesaria':iss.type==='coord'?'Dependencia de coordinación':'Dependencia faltante';
     noteHtml=`<div class="tt-note ${cls}"><strong>${lbl}:</strong> ${iss.note}</div>`;
   } else if(mode==='dep' && depView==='fixed' && fixData){
     noteHtml=`<div class="tt-note green"><strong>Corrección aplicada:</strong> ${fixData.note}</div>`;
-  } else if(mode==='prop' && propData){
+  } else if(isProp && propData){
     noteHtml=`<div class="tt-note green"><strong>Ajuste propuesto:</strong> ${propData.note}</div>`;
   }
 
@@ -409,7 +511,7 @@ function showTT(t, ev){
     <span class="tt-badge" style="background:${c}22;color:${c};border:1px solid ${c}44">${t.crítical?'Ruta crítica':TL[t.team]}</span>
     <div class="tt-row"><span>Inicio</span><span>Día ${useStart}</span></div>
     <div class="tt-row"><span>Fin</span><span>Día ${useEnd}</span></div>
-    <div class="tt-row"><span>Duración</span><span>${dur} dia${dur>1?'s':''}</span></div>
+    <div class="tt-row"><span>Duración</span><span>${dur} día${dur>1?'s':''}</span></div>
     ${useEnd>DEAD?`<div class="tt-row"><span>Excede deadline</span><span style="color:#DC2626">+${useEnd-DEAD} días</span></div>`:''}
     ${noteHtml}
     <hr class="tt-div">
@@ -420,7 +522,7 @@ function showTT(t, ev){
 
   let x=ev.clientX+14, y=ev.clientY+14;
   if(x+295>window.innerWidth-10)  x=ev.clientX-295-14;
-  if(y+330>window.innerHeight-10) y=ev.clientY-330-14;
+  if(y+340>window.innerHeight-10) y=ev.clientY-340-14;
   ttEl.style.left=x+'px'; ttEl.style.top=y+'px';
   ttEl.classList.add('visible');
 }
@@ -436,7 +538,6 @@ document.addEventListener('click',()=>{
   document.querySelectorAll('.task-row').forEach(r=>r.classList.remove('highlighted','dep-highlighted'));
 });
 
-// ── RENDER MODES ──────────────────────────────────────────
 function renderRows(){
   rowMeta.forEach(r=>{
     if(r.isSec) return;
@@ -445,12 +546,28 @@ function renderRows(){
     const tmEl=document.getElementById('tm-'+t.id);
     const critBadge=t.crítical?'<span class="ctag">crítica</span>':'';
 
-    r.el.classList.remove('issue-unnecessary','issue-missing','issue-fixed','prop-changed');
+    r.el.classList.remove('issue-unnecessary','issue-missing','issue-fixed','prop-changed','block-shifted','block-origin');
 
-    if(mode==='dep' && depView==='current'){
+    if(mode==='block'){
+      const blk=blockScenario[t.id];
+      const showDead = blockView==='impact';
+      if(blk){
+        const isOrigin = t.id==='T1';
+        r.el.classList.add(isOrigin?'block-origin':'block-shifted');
+        const tagTxt = isOrigin ? 'retraso origen' : 'impacto';
+        if(tnEl) tnEl.innerHTML=`${t.label}${critBadge}<span class="itag blk">${tagTxt}</span>`;
+        if(tmEl) tmEl.innerHTML=`D${blk.start}–D${blk.end} &middot; <span style="color:#6D28D9;font-weight:500">desplazada</span>`;
+        buildBars(r.el, blk.start, blk.end, isOrigin?'bar-mkt':'bar-block', t, true, showDead);
+      } else {
+        if(tnEl) tnEl.innerHTML=`${t.label}${critBadge}`;
+        if(tmEl) tmEl.innerHTML=`D${t.start}–D${t.end} &middot; ${t.deps.length?'dep. '+t.deps.join(', '):'sin dependencia'}`;
+        buildBars(r.el, t.start, t.end, t.crítical?'bar-crit':'bar-'+t.team, t, true, showDead);
+      }
+
+    } else if(mode==='dep' && depView==='current'){
       const iss=depIssues[t.id];
       if(iss){
-        r.el.classList.add(iss.type==='unnecessary'?'issue-unnecessary':iss.type==='coord'?'issue-missing':'issue-missing');
+        r.el.classList.add(iss.type==='unnecessary'?'issue-unnecessary':'issue-missing');
         const tagCls=iss.type==='unnecessary'?'unn':iss.type==='coord'?'crd':'mis';
         const tagTxt=iss.type==='unnecessary'?'dep. innecesaria':iss.type==='coord'?'dep. coordinación':'dep. faltante';
         if(tnEl) tnEl.innerHTML=`${t.label}${critBadge}<span class="itag ${tagCls}">${tagTxt}</span>`;
@@ -458,7 +575,7 @@ function renderRows(){
         if(tnEl) tnEl.innerHTML=`${t.label}${critBadge}`;
       }
       if(tmEl) tmEl.innerHTML=`D${t.start}–D${t.end} &middot; ${t.deps.length?'dep. '+t.deps.join(', '):'sin dependencia'}`;
-      buildBars(r.el, t.start, t.end, t.crítical?'bar-crit':'bar-'+t.team, t);
+      buildBars(r.el, t.start, t.end, t.crítical?'bar-crit':'bar-'+t.team, t, false, false);
 
     } else if(mode==='dep' && depView==='fixed'){
       const fix=depFixed[t.id];
@@ -466,11 +583,11 @@ function renderRows(){
         r.el.classList.add('issue-fixed');
         if(tnEl) tnEl.innerHTML=`${t.label}${critBadge}<span class="itag fix">corregida</span>`;
         if(tmEl) tmEl.innerHTML=`D${fix.start}–D${fix.end} &middot; dep. ${fix.deps.join(', ')} <span style="color:#059669">(corregida)</span>`;
-        buildBars(r.el, fix.start, fix.end, t.crítical?'bar-crit':'bar-'+t.team, t);
+        buildBars(r.el, fix.start, fix.end, t.crítical?'bar-crit':'bar-'+t.team, t, false, false);
       } else {
         if(tnEl) tnEl.innerHTML=`${t.label}${critBadge}`;
         if(tmEl) tmEl.innerHTML=`D${t.start}–D${t.end} &middot; ${t.deps.length?'dep. '+t.deps.join(', '):'sin dependencia'}`;
-        buildBars(r.el, t.start, t.end, t.crítical?'bar-crit':'bar-'+t.team, t);
+        buildBars(r.el, t.start, t.end, t.crítical?'bar-crit':'bar-'+t.team, t, false, false);
       }
 
     } else if(mode==='prop'){
@@ -479,18 +596,17 @@ function renderRows(){
         r.el.classList.add('prop-changed');
         if(tnEl) tnEl.innerHTML=`${t.label}${critBadge}<span class="ptag">ajustada</span>`;
         if(tmEl) tmEl.innerHTML=`D${p.start}–D${p.end} &middot; <span style="color:#059669;font-weight:500">propuesto</span>`;
-        buildBars(r.el, p.start, p.end, 'bar-prop', t);
+        buildBars(r.el, p.start, p.end, 'bar-prop', t, false, false);
       } else {
         if(tnEl) tnEl.innerHTML=`${t.label}${critBadge}`;
         if(tmEl) tmEl.innerHTML=`D${t.start}–D${t.end} &middot; ${t.deps.length?'dep. '+t.deps.join(', '):'sin dependencia'}`;
-        buildBars(r.el, t.start, t.end, t.crítical?'bar-crit':'bar-'+t.team, t);
+        buildBars(r.el, t.start, t.end, t.crítical?'bar-crit':'bar-'+t.team, t, false, false);
       }
 
     } else {
-      // normal
       if(tnEl) tnEl.innerHTML=`${t.label}${critBadge}`;
       if(tmEl) tmEl.innerHTML=`D${t.start}–D${t.end} &middot; ${t.deps.length?'dep. '+t.deps.join(', '):'sin dependencia'}`;
-      buildBars(r.el, t.start, t.end, t.crítical?'bar-crit':'bar-'+t.team, t);
+      buildBars(r.el, t.start, t.end, t.crítical?'bar-crit':'bar-'+t.team, t, false, false);
     }
   });
 }
@@ -502,7 +618,8 @@ function applyVisibility(){
     const show = f==='all'?true : f==='crit'?r.crítical : r.team===f;
     const hasIssue = (mode==='dep') && (depIssues[r.id]||depFixed[r.id]);
     const hasProp  = (mode==='prop') && proposal[r.id];
-    r.el.classList.toggle('dimmed', !show && !hasIssue && !hasProp);
+    const hasBlock = (mode==='block') && blockScenario[r.id];
+    r.el.classList.toggle('dimmed', !show && !hasIssue && !hasProp && !hasBlock);
   });
   rowMeta.forEach(r=>{
     if(!r.isSec) return;
@@ -522,22 +639,29 @@ function updateCards(){
     durEl.textContent='29 días'; durEl.className='ival vgreen';
     subEl.textContent='1 día de margen antes del deadline';
     pd.textContent='Entrega propuesta: día 29'; pd.style.cssText='background:rgba(16,185,129,0.09);color:#065F46;border:1px solid rgba(16,185,129,0.25)';
-    pv.textContent='Margen: +1 dia'; pv.style.cssText='background:rgba(29,187,172,0.09);color:#0F8078;border:1px solid rgba(29,187,172,0.28)';
-    fourth.classList.add('green-card');
+    pv.textContent='Margen: +1 día'; pv.style.cssText='background:rgba(29,187,172,0.09);color:#0F8078;border:1px solid rgba(29,187,172,0.28)';
+    fourth.classList.remove('purple-card'); fourth.classList.add('green-card');
     fourth.innerHTML='<div class="ilbl">Ajustes aplicados</div><div class="ival vgreen">3 tareas</div><div class="isub">II, III y V solapadas 1 día c/u</div>';
     chain.textContent='T1→I→II→III→V (día 29)';
+  } else if(mode==='block'){
+    durEl.textContent='35 días'; durEl.className='ival vpurple';
+    subEl.textContent='5 días sobre el plazo pactado';
+    pd.textContent='Entrega con bloqueo: día 35'; pd.style.cssText='background:rgba(124,58,237,0.09);color:#4C1D95;border:1px solid rgba(124,58,237,0.25)';
+    pv.textContent='Desviación: +5 días'; pv.style.cssText='background:rgba(239,68,68,0.09);color:#B91C1C;border:1px solid rgba(239,68,68,0.22)';
+    fourth.classList.remove('green-card'); fourth.classList.add('purple-card');
+    fourth.innerHTML='<div class="ilbl">Tareas afectadas</div><div class="ival vpurple">10 tareas</div><div class="isub">T1 retrasa 6 días, impacta toda la cadena</div>';
+    chain.textContent='T1→I→II→III→V (día 35)';
   } else {
     durEl.textContent='32 días'; durEl.className='ival vred';
     subEl.textContent='2 días sobre el plazo';
     pd.textContent='Entrega actual: día 32'; pd.style.cssText='background:rgba(239,68,68,0.09);color:#B91C1C;border:1px solid rgba(239,68,68,0.22)';
     pv.textContent='Desviación: +2 días'; pv.style.cssText='background:rgba(245,158,11,0.09);color:#92400E;border:1px solid rgba(245,158,11,0.26)';
-    fourth.classList.remove('green-card');
+    fourth.classList.remove('green-card','purple-card');
     fourth.innerHTML='<div class="ilbl">Tareas en paralelo</div><div class="ival vteal">6 tareas</div><div class="isub">Desde día 1 y día 11</div>';
     chain.textContent='T1→I→II→III→V (día 32)';
   }
 }
 
-// ── CONTROLS ──────────────────────────────────────────────
 function setTeam(f){
   teamFilter=f;
   document.querySelectorAll('.fbtn[onclick^="setTeam"]').forEach(b=>b.classList.remove('active'));
@@ -545,15 +669,93 @@ function setTeam(f){
   applyVisibility();
 }
 
+let blockView = 'impact';
+
 function setMode(m){
   mode = mode===m ? 'normal' : m;
   document.querySelectorAll('.fbtn[onclick^="setMode"]').forEach(b=>b.classList.remove('active'));
   if(mode!=='normal') document.querySelector('.f-'+mode).classList.add('active');
-  document.getElementById('banner-dep').classList.toggle('visible', mode==='dep');
-  document.getElementById('banner-prop').classList.toggle('visible', mode==='prop');
-  document.getElementById('sub-toggle').classList.toggle('visible', mode==='dep');
+  document.getElementById('banner-dep').classList.toggle('visible',      mode==='dep');
+  document.getElementById('banner-prop').classList.toggle('visible',     mode==='prop');
+  document.getElementById('banner-block').classList.toggle('visible',    mode==='block');
+  document.getElementById('sub-toggle').classList.toggle('visible',      mode==='dep');
+  document.getElementById('sub-toggle-block').classList.toggle('visible',mode==='block');
+  if(mode!=='block') clearMilestones();
   renderRows(); applyVisibility(); updateCards();
+  if(mode==='block') drawMilestones();
 }
+
+function setBlockView(v){
+  blockView = v;
+  document.getElementById('st-block-impact').classList.toggle('active',  v==='impact');
+  document.getElementById('st-block-mgmt').classList.toggle('active',   v==='mgmt');
+  document.getElementById('st-block-mgmt').classList.toggle('purple',   v==='mgmt');
+  const banner = document.getElementById('banner-block');
+  if(v==='impact'){
+    banner.innerHTML='<span class="bdot" style="background:#7C3AED"></span><span>Día 8: T1 se retrasa 6 días (termina día 16). Impacto en cadena sobre 6 tareas — entrega se mueve de <strong>día 32</strong> a <strong>día 35</strong></span>';
+  } else {
+    banner.innerHTML='<span class="bdot" style="background:#7C3AED"></span><span>Gestión activa: revisión día 12 con borrador → decisión día 16 con mensajes finales → informe día 23 para evaluar ampliación del plazo</span>';
+  }
+  clearMilestones();
+  renderRows(); applyVisibility();
+  if(mode==='block') drawMilestones();
+}
+
+function getLabelWidth(){ return 230; }
+function getCellWidth(){ return 24; }
+
+function getDayX(day){
+  const labelW = getLabelWidth();
+  const cellW  = getCellWidth();
+  return labelW + (day - 1) * cellW + cellW / 2;
+}
+
+function clearMilestones(){
+  document.getElementById('milestone-overlay').innerHTML = '';
+  const h = document.getElementById('milestone-header');
+  if(h){ h.innerHTML = ''; h.style.height = '0'; }
+}
+
+function drawMilestones(){
+  if(blockView !== 'mgmt') return;
+  const header     = document.getElementById('milestone-header');
+  const scroll     = document.getElementById('gantt-scroll');
+  const scrollLeft = scroll.scrollLeft;
+  header.innerHTML = '';
+
+  const milestones = [
+    { day:12, cls:'m-review', label:'Día 12 — Revisión con borrador',         row: 0 },
+    { day:16, cls:'m-decide', label:'Día 16 — Decisión con mensajes finales',  row: 1 },
+    { day:23, cls:'m-report', label:'Día 23 — Informe de avance y evaluación', row: 0 },
+  ];
+
+  const rowH = 22;
+  const totalRows = 2;
+  header.style.height = (totalRows * rowH + 6) + 'px';
+
+  milestones.forEach(m => {
+    const x = getDayX(m.day) - scrollLeft;
+    const item = document.createElement('div');
+    item.className = 'mh-item';
+    item.style.left   = x + 'px';
+    item.style.bottom = (m.row * rowH) + 'px';
+    item.style.transform = 'none';
+    item.style.position = 'absolute';
+
+    const line = document.createElement('div');
+    line.className = 'mh-line ' + m.cls;
+
+    const lbl = document.createElement('div');
+    lbl.className = 'mh-label ' + m.cls;
+    lbl.textContent = m.label;
+
+    item.appendChild(line);
+    item.appendChild(lbl);
+    header.appendChild(item);
+  });
+}
+
+
 
 function setDepView(v){
   depView=v;
@@ -562,9 +764,24 @@ function setDepView(v){
   document.getElementById('st-fixed').classList.toggle('green', v==='fixed');
   const bannerText=document.getElementById('banner-dep-text');
   if(v==='current') bannerText.innerHTML='<strong>rojo</strong>: dep. innecesaria &nbsp;|&nbsp; <strong>naranja</strong>: dep. faltante &nbsp;|&nbsp; <strong style="color:#6366F1">azul</strong>: dep. coordinación — Haz click en una barra para ver el detalle';
-  else bannerText.innerHTML='Vista con <strong>correcciónes aplicadas</strong> — barras reposiciónadas según dependencias corregidas';
+  else bannerText.innerHTML='Vista con <strong>correcciones aplicadas</strong> — barras reposicionadas según dependencias corregidas';
   renderRows(); applyVisibility();
 }
+
+window.addEventListener('scroll', () => { if(mode==='block') { clearMilestones(); drawMilestones(); } }, true);
+document.getElementById('gantt-scroll').addEventListener('scroll', function(){
+  if(mode==='block' && blockView==='mgmt'){
+    const header = document.getElementById('milestone-header');
+    const scroll = document.getElementById('gantt-scroll');
+    const scrollLeft = scroll.scrollLeft;
+    header.querySelectorAll('.mh-item').forEach((item, i) => {
+      const milestones = [
+        { day:12 }, { day:16 }, { day:23 }
+      ];
+      if(milestones[i]) item.style.left = (getDayX(milestones[i].day) - scrollLeft) + 'px';
+    });
+  }
+});
 </script>
 </body>
 </html>

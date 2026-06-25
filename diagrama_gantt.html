@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gantt — Proyecto Comunicacion Alegra</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --alegra:    #1DBBAC;
+    --alegra-dk: #0F8078;
+    --alegra-lt: rgba(29,187,172,0.08);
+    --bg:        #F4FBFA;
+    --surface:   #FFFFFF;
+    --border:    rgba(0,0,0,0.07);
+    --border2:   rgba(0,0,0,0.12);
+    --text:      #1A1D23;
+    --muted:     #6B7280;
+    --faint:     #B0B7C3;
+    --mkt:       #1DBBAC;
+    --ven:       #6366F1;
+    --pro:       #F43F5E;
+    --crit:      #F59E0B;
+    --dead-bg:   rgba(239,68,68,0.07);
+    --dead-line: rgba(239,68,68,0.55);
+    --font:      'Inter', sans-serif;
+    --mono:      'JetBrains Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 20px 24px 40px;
+  }
+
+  /* Header */
+  .header {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; margin-bottom: 14px; flex-wrap: wrap;
+  }
+  .logo-area  { display: flex; align-items: center; gap: 14px; }
+  .logo-img   { height: 30px; width: auto; display: block; }
+  .logo-div   { width: 1px; height: 26px; background: var(--border2); }
+  .header-title { display: flex; flex-direction: column; gap: 1px; }
+  .header-eye {
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+  }
+  .header-h1 { font-size: 16px; font-weight: 600; color: var(--text); letter-spacing: -0.02em; }
+
+  .pills { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .pill {
+    font-family: var(--mono); font-size: 10px; font-weight: 500;
+    padding: 3px 10px; border-radius: 99px; white-space: nowrap;
+  }
+  .pill-teal  { background: var(--alegra-lt); color: var(--alegra-dk); border: 1px solid rgba(29,187,172,0.28); }
+  .pill-amber { background: rgba(245,158,11,0.09); color: #92400E; border: 1px solid rgba(245,158,11,0.26); }
+  .pill-red   { background: rgba(239,68,68,0.09); color: #B91C1C; border: 1px solid rgba(239,68,68,0.22); }
+
+  /* Filters */
+  .filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
+  .filter-label {
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-right: 4px;
+  }
+  .filter-btn {
+    font-family: var(--mono); font-size: 11px; font-weight: 500;
+    padding: 4px 12px; border-radius: 6px; border: 1px solid var(--border2);
+    background: var(--surface); color: var(--muted); cursor: pointer;
+    transition: all 0.12s; display: flex; align-items: center; gap: 6px;
+  }
+  .filter-btn:hover { border-color: var(--alegra); color: var(--alegra-dk); }
+  .filter-btn.active { color: #fff; border-color: transparent; }
+  .filter-btn.active.f-all  { background: var(--text); }
+  .filter-btn.active.f-mkt  { background: var(--mkt); }
+  .filter-btn.active.f-ven  { background: var(--ven); }
+  .filter-btn.active.f-pro  { background: var(--pro); }
+  .filter-btn.active.f-crit { background: var(--crit); }
+  .filter-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* Gantt */
+  .gantt-container {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden;
+  }
+  .gantt-scroll { overflow-x: auto; }
+
+  table { border-collapse: collapse; table-layout: fixed; width: 100%; }
+
+  thead tr { border-bottom: 1px solid var(--border2); background: #FAFAFA; }
+  thead th {
+    font-family: var(--mono); font-size: 9px; font-weight: 500;
+    color: var(--faint); text-align: center;
+    padding: 7px 0 6px; letter-spacing: 0.04em; user-select: none;
+  }
+  thead th.th-label {
+    text-align: left; padding-left: 16px; width: 220px;
+    font-size: 10px; letter-spacing: 0.09em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  thead th.th-day { width: 24px; }
+  thead th.th-day.wk { border-left: 1px solid var(--border2); }
+
+  /* Deadline column: roja en thead y en cada fila */
+  thead th.th-day.is-dead {
+    background: var(--dead-bg);
+    border-left: 2px solid var(--dead-line);
+    border-right: 1px solid rgba(239,68,68,0.2);
+  }
+  thead th.th-day.is-dead .dnum { color: #EF4444; font-weight: 700; }
+
+  .dnum { display: block; font-family: var(--mono); font-size: 8px; color: var(--faint); }
+
+  /* Section rows */
+  tr.sec-row { transition: opacity 0.15s; }
+  tr.sec-row td {
+    padding: 10px 16px 4px;
+    font-family: var(--mono); font-size: 10px; font-weight: 600;
+    letter-spacing: 0.13em; text-transform: uppercase;
+    color: var(--alegra-dk); border-top: 1px solid var(--border);
+    background: var(--alegra-lt);
+  }
+  tr.sec-row:first-child td { border-top: none; }
+
+  /* Task rows */
+  tr.task-row { transition: background 0.1s, opacity 0.15s; }
+  tr.task-row:hover { background: rgba(29,187,172,0.03); }
+  tr.task-row td { border-bottom: 1px solid var(--border); height: 36px; vertical-align: middle; }
+  tr.task-row:last-child td { border-bottom: none; }
+  tr.task-row.dimmed { opacity: 0.15; }
+  tr.sec-row.dimmed  { opacity: 0.2; }
+  tr.task-row.highlighted { background: rgba(29,187,172,0.06); }
+  tr.task-row.dep-highlighted { background: rgba(245,158,11,0.07); }
+
+  /* Label cell */
+  .tlabel { padding: 0 10px 0 16px; overflow: hidden; }
+  .tname {
+    font-size: 12px; font-weight: 400; color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .tmeta { font-family: var(--mono); font-size: 9px; color: var(--muted); margin-top: 1px; }
+  .ctag {
+    display: inline-block; font-family: var(--mono); font-size: 8px; font-weight: 600;
+    color: #92400E; background: rgba(245,158,11,0.12);
+    border: 1px solid rgba(245,158,11,0.28);
+    padding: 1px 5px; border-radius: 3px; margin-left: 5px;
+    letter-spacing: 0.04em; vertical-align: middle;
+  }
+
+  /* Bar cells */
+  td.bcell-empty { background: transparent; }
+  td.bcell-empty.wk { border-left: 1px solid rgba(0,0,0,0.05); }
+  td.bcell-empty.is-dead {
+    background: var(--dead-bg);
+    border-left: 2px solid var(--dead-line);
+    border-right: 1px solid rgba(239,68,68,0.2);
+  }
+
+  td.bcell-bar { padding: 0; position: relative; vertical-align: middle; cursor: pointer; }
+  td.bcell-bar::before {
+    content: ''; position: absolute;
+    top: 9px; bottom: 9px; left: 0; right: 0;
+    transition: filter 0.12s, top 0.12s, bottom 0.12s;
+  }
+  td.bcell-bar:hover::before { top: 7px; bottom: 7px; filter: brightness(1.1); }
+
+  td.bcell-bar.bar-start::before { border-radius: 4px 0 0 4px; left: 2px; }
+  td.bcell-bar.bar-end::before   { border-radius: 0 4px 4px 0; right: 2px; }
+  td.bcell-bar.bar-solo::before  { border-radius: 4px; left: 2px; right: 2px; }
+
+  td.bcell-bar.bar-mkt::before  { background: var(--mkt); }
+  td.bcell-bar.bar-ven::before  { background: var(--ven); }
+  td.bcell-bar.bar-pro::before  { background: var(--pro); }
+  td.bcell-bar.bar-crit::before { background: var(--crit); box-shadow: 0 0 8px rgba(245,158,11,0.3); }
+  td.bcell-bar.bar-ov::before {
+    background: repeating-linear-gradient(
+      -45deg, rgba(239,68,68,0.6), rgba(239,68,68,0.6) 3px,
+      rgba(239,68,68,0.15) 3px, rgba(239,68,68,0.15) 7px
+    );
+    border-radius: 0 4px 4px 0; right: 2px;
+  }
+
+  /* Deadline column dentro de bcell-bar */
+  td.bcell-bar.is-dead-col {
+    border-left: 2px solid var(--dead-line);
+  }
+
+  /* Tooltip panel */
+  #tooltip {
+    position: fixed;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 12px 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    font-size: 12px;
+    min-width: 200px;
+    max-width: 280px;
+    z-index: 1000;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  #tooltip.visible { opacity: 1; }
+  .tt-title { font-weight: 600; font-size: 13px; color: var(--text); margin-bottom: 8px; }
+  .tt-row { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 4px; color: var(--muted); font-size: 11px; }
+  .tt-row span:last-child { color: var(--text); font-family: var(--mono); font-size: 11px; }
+  .tt-divider { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
+  .tt-deps-title { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .tt-dep-item { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; font-size: 11px; color: var(--text); }
+  .tt-dep-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .tt-nodep { font-size: 11px; color: var(--muted); font-style: italic; }
+  .tt-team-badge {
+    display: inline-block; font-family: var(--mono); font-size: 9px; font-weight: 600;
+    padding: 2px 7px; border-radius: 4px; margin-bottom: 8px;
+  }
+
+  /* Insight cards */
+  .insight-row {
+    margin-top: 14px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;
+  }
+  .icard { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 13px 15px; }
+  .ilbl { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .ival { font-size: 19px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; }
+  .isub { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .vred   { color: #DC2626; }
+  .vamber { color: #D97706; }
+  .vteal  { color: var(--alegra-dk); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-area">
+    <img src="Logo.png" alt="Alegra" class="logo-img">
+    <div class="logo-div"></div>
+    <div class="header-title">
+      <div class="header-eye">Operations Analyst &nbsp;/&nbsp; Proyecto Comunicación</div>
+      <div class="header-h1">Cronograma de proyecto</div>
+    </div>
+  </div>
+  <div class="pills">
+    <span class="pill pill-teal">Plazo pactado: día 30</span>
+    <span class="pill pill-amber">Duración real: día 32</span>
+    <span class="pill pill-red">Desviación: +2 días</span>
+  </div>
+</div>
+
+<div class="filters">
+  <span class="filter-label">Ver:</span>
+  <button class="filter-btn f-all active" onclick="setFilter('all')">Todos</button>
+  <button class="filter-btn f-mkt" onclick="setFilter('mkt')">
+    <span class="filter-dot" style="background:var(--mkt)"></span>Marketing
+  </button>
+  <button class="filter-btn f-ven" onclick="setFilter('ven')">
+    <span class="filter-dot" style="background:var(--ven)"></span>Ventas
+  </button>
+  <button class="filter-btn f-pro" onclick="setFilter('pro')">
+    <span class="filter-dot" style="background:var(--pro)"></span>Producto
+  </button>
+  <button class="filter-btn f-crit" onclick="setFilter('crit')">
+    <span class="filter-dot" style="background:var(--crit)"></span>Ruta crítica
+  </button>
+</div>
+
+<div class="gantt-container">
+  <div class="gantt-scroll">
+    <table id="gtable"></table>
+  </div>
+</div>
+
+<div class="insight-row">
+  <div class="icard">
+    <div class="ilbl">Duración real</div>
+    <div class="ival vred">32 días</div>
+    <div class="isub">2 días sobre el plazo</div>
+  </div>
+  <div class="icard">
+    <div class="ilbl">Ruta crítica</div>
+    <div class="ival vamber">5 tareas</div>
+    <div class="isub">T1 → I → II → III → V</div>
+  </div>
+  <div class="icard">
+    <div class="ilbl">Nodo de mayor riesgo</div>
+    <div class="ival vamber">Tarea 1</div>
+    <div class="isub">Desbloquea 7 tareas de 3 equipos</div>
+  </div>
+  <div class="icard">
+    <div class="ilbl">Tareas en paralelo</div>
+    <div class="ival vteal">6 tareas</div>
+    <div class="isub">Desde dia 1 y dia 11</div>
+  </div>
+</div>
+
+<!-- Tooltip -->
+<div id="tooltip"></div>
+
+<script>
+const DAYS = 32;
+const DEAD = 30;
+
+const teamColor = { mkt: '#1DBBAC', ven: '#6366F1', pro: '#F43F5E' };
+const teamLabel = { mkt: 'Marketing', ven: 'Ventas', pro: 'Producto' };
+
+const tasks = [
+  { section: 'Marketing' },
+  { id:'T1',  label:'1. Determinación de mensajes clave',               team:'mkt', start:1,  end:10, critical:true,  deps:[] },
+  { id:'T4',  label:'4. Prototipado de nuevo landing',       team:'mkt', start:1,  end:5,  critical:false, deps:[] },
+  { id:'T2',  label:'2. Diseño de nuevos assets para ads y websites',             team:'mkt', start:11, end:15, critical:false, deps:['T1'] },
+  { id:'T5',  label:'5. Implementacion nuevo landing',    team:'mkt', start:6,  end:10, critical:false, deps:['T4'] },
+  { id:'T3',  label:'3. Configuración de nuevas campañas de ads',         team:'mkt', start:16, end:17, critical:false, deps:['T2','T5'] },
+  { section: 'Ventas' },
+  { id:'D',   label:'D. Test al equipo comercial',     team:'ven', start:1,  end:1,  critical:false, deps:[] },
+  { id:'A',   label:'A. Modificar playbook de ventas',           team:'ven', start:11, end:13, critical:false, deps:['T1'] },
+  { id:'C',   label:'C. Entrenamiento equipo comercial',      team:'ven', start:11, end:17, critical:false, deps:['T1'] },
+  { id:'B',   label:'B. Actualización de propuestas comerciales',       team:'ven', start:16, end:20, critical:false, deps:['T2'] },
+  { section: 'Producto' },
+  { id:'IV',  label:'IV. Documentacion de cambios',    team:'pro', start:11, end:13, critical:false, deps:['T1'] },
+  { id:'I',   label:'I. Creacion de prototipos con cambios',       team:'pro', start:11, end:20, critical:true,  deps:['T1'] },
+  { id:'II',  label:'II. Aprobacion y ajustes en prototipo',        team:'pro', start:21, end:22, critical:true,  deps:['I'] },
+  { id:'III', label:'III. Desarrollo e implementacion del prototipo aprobado',team:'pro', start:23, end:27, critical:true,  deps:['II'] },
+  { id:'V',   label:'V. QA y lanzamiento del desarrollo',             team:'pro', start:28, end:32, critical:true,  deps:['III'] },
+];
+
+// Index tasks by id for quick lookup
+const taskById = {};
+tasks.forEach(t => { if(t.id) taskById[t.id] = t; });
+
+// Find what each task unlocks (dependants)
+const unlockedBy = {}; // taskId -> [taskIds that depend on it]
+tasks.forEach(t => {
+  if(!t.id) return;
+  (t.deps || []).forEach(dep => {
+    if(!unlockedBy[dep]) unlockedBy[dep] = [];
+    unlockedBy[dep].push(t.id);
+  });
+});
+
+const table = document.getElementById('gtable');
+const rowByTaskId = {};
+
+// THEAD
+const thead = document.createElement('thead');
+const hrow  = document.createElement('tr');
+const thL   = document.createElement('th');
+thL.className = 'th-label';
+thL.textContent = 'Tarea';
+hrow.appendChild(thL);
+
+for(let d = 1; d <= DAYS; d++){
+  const th = document.createElement('th');
+  th.className = 'th-day' +
+    (d === DEAD ? ' is-dead' : '') +
+    (d % 7 === 1 ? ' wk' : '');
+  th.innerHTML = `<span class="dnum">${d}</span>`;
+  hrow.appendChild(th);
+}
+thead.appendChild(hrow);
+table.appendChild(thead);
+
+// TBODY
+const tbody   = document.createElement('tbody');
+const rowMeta = [];
+
+tasks.forEach(t => {
+  if(t.section){
+    const tr = document.createElement('tr');
+    tr.className = 'sec-row';
+    tr.dataset.section = t.section;
+    const td = document.createElement('td');
+    td.colSpan = DAYS + 1;
+    td.textContent = t.section;
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+    rowMeta.push({ el: tr, section: t.section, isSec: true });
+    return;
+  }
+
+  const tr = document.createElement('tr');
+  tr.className = 'task-row';
+  tr.dataset.team     = t.team;
+  tr.dataset.critical = t.critical ? '1' : '0';
+  tr.dataset.taskId   = t.id;
+  rowByTaskId[t.id]   = tr;
+
+  const depStr    = t.deps.length ? `dep. ${t.deps.join(', ')}` : 'sin dependencia';
+  const critBadge = t.critical ? `<span class="ctag">critica</span>` : '';
+  const lTd = document.createElement('td');
+  lTd.className = 'tlabel';
+  lTd.innerHTML = `
+    <div class="tname">${t.label}${critBadge}</div>
+    <div class="tmeta">D${t.start}–D${t.end} &middot; ${depStr}</div>
+  `;
+  tr.appendChild(lTd);
+
+  // Vacío antes
+  if(t.start > 1){
+    const tdPre = document.createElement('td');
+    tdPre.colSpan = t.start - 1;
+    // Mark if deadline column falls in this empty span
+    tdPre.className = 'bcell-empty' + (t.start > DEAD + 1 ? ' is-dead-pre' : '');
+    // If deadline is within this empty span, split it
+    if(t.start > 1 && DEAD >= 1 && DEAD < t.start){
+      // deadline is before bar starts — add two empty cells
+      const tdPre1 = document.createElement('td');
+      tdPre1.colSpan = DEAD - 1;
+      tdPre1.className = 'bcell-empty';
+      tr.appendChild(tdPre1);
+
+      const tdDead = document.createElement('td');
+      tdDead.className = 'bcell-empty is-dead';
+      tr.appendChild(tdDead);
+
+      const remaining = t.start - DEAD - 1;
+      if(remaining > 0){
+        const tdPre2 = document.createElement('td');
+        tdPre2.colSpan = remaining;
+        tdPre2.className = 'bcell-empty';
+        tr.appendChild(tdPre2);
+      }
+    } else {
+      tdPre.className = 'bcell-empty';
+      tr.appendChild(tdPre);
+    }
+  }
+
+  const color       = t.critical ? 'bar-crit' : `bar-${t.team}`;
+  const crossesDead = t.end > DEAD;
+  const barCells    = [];
+
+  if(crossesDead){
+    const spanSafe = DEAD - t.start + 1;
+    const tdSafe   = document.createElement('td');
+    tdSafe.colSpan  = spanSafe;
+    tdSafe.className = `bcell-bar ${color} ${spanSafe === 1 ? 'bar-solo' : 'bar-start'}`;
+    tr.appendChild(tdSafe);
+    barCells.push(tdSafe);
+
+    const spanOv = t.end - DEAD;
+    const tdOv   = document.createElement('td');
+    tdOv.colSpan  = spanOv;
+    tdOv.className = 'bcell-bar bar-ov bar-end';
+    tr.appendChild(tdOv);
+    barCells.push(tdOv);
+  } else {
+    const span  = t.end - t.start + 1;
+    const tdBar = document.createElement('td');
+    tdBar.colSpan  = span;
+    tdBar.className = `bcell-bar ${color} ${span === 1 ? 'bar-solo' : 'bar-start bar-end'}`;
+    // If deadline falls inside bar, add left border on this cell
+    if(t.start <= DEAD && t.end >= DEAD){
+      tdBar.style.borderLeft = '2px solid rgba(239,68,68,0.55)';
+    }
+    tr.appendChild(tdBar);
+    barCells.push(tdBar);
+  }
+
+  // Vacío después
+  const endDay = Math.min(t.end, DAYS);
+  if(endDay < DAYS){
+    const remaining = DAYS - endDay;
+    // Check if deadline is in the post-bar empty space
+    if(DEAD > endDay && DEAD <= DAYS){
+      const pre2 = DEAD - endDay - 1;
+      if(pre2 > 0){
+        const tdE1 = document.createElement('td');
+        tdE1.colSpan = pre2;
+        tdE1.className = 'bcell-empty';
+        tr.appendChild(tdE1);
+      }
+      const tdD2 = document.createElement('td');
+      tdD2.className = 'bcell-empty is-dead';
+      tr.appendChild(tdD2);
+      const post2 = DAYS - DEAD;
+      if(post2 > 0){
+        const tdE2 = document.createElement('td');
+        tdE2.colSpan = post2;
+        tdE2.className = 'bcell-empty';
+        tr.appendChild(tdE2);
+      }
+    } else {
+      const tdPost = document.createElement('td');
+      tdPost.colSpan  = remaining;
+      tdPost.className = 'bcell-empty';
+      tr.appendChild(tdPost);
+    }
+  }
+
+  // Click handler on bar cells
+  barCells.forEach(cell => {
+    cell.addEventListener('click', (e) => {
+      e.stopPropagation();
+      showTooltip(t, e);
+      highlightTask(t);
+    });
+  });
+
+  tbody.appendChild(tr);
+  rowMeta.push({ el: tr, team: t.team, critical: t.critical, isSec: false });
+});
+
+table.appendChild(tbody);
+
+// TOOLTIP
+const tooltip = document.getElementById('tooltip');
+let activeTask = null;
+
+function showTooltip(t, e){
+  activeTask = t.id;
+  const color = t.critical ? '#F59E0B' : teamColor[t.team];
+  const dur   = t.end - t.start + 1;
+
+  const depItems = t.deps.length
+    ? t.deps.map(dep => {
+        const dt = taskById[dep];
+        const dc = dt ? (dt.critical ? '#F59E0B' : teamColor[dt.team]) : '#999';
+        return `<div class="tt-dep-item">
+          <span class="tt-dep-dot" style="background:${dc}"></span>
+          <span>${dt ? dt.label : dep}</span>
+        </div>`;
+      }).join('')
+    : `<div class="tt-nodep">Sin dependencias — puede iniciar desde el dia 1</div>`;
+
+  const unlocks = (unlockedBy[t.id] || []);
+  const unlockItems = unlocks.length
+    ? unlocks.map(uid => {
+        const ut = taskById[uid];
+        const uc = ut ? (ut.critical ? '#F59E0B' : teamColor[ut.team]) : '#999';
+        return `<div class="tt-dep-item">
+          <span class="tt-dep-dot" style="background:${uc}"></span>
+          <span>${ut ? ut.label : uid}</span>
+        </div>`;
+      }).join('')
+    : `<div class="tt-nodep">No desbloquea ninguna tarea</div>`;
+
+  tooltip.innerHTML = `
+    <div class="tt-title">${t.label}</div>
+    <div class="tt-team-badge" style="background:${color}22;color:${color};border:1px solid ${color}44">
+      ${t.critical ? 'Ruta critica' : teamLabel[t.team]}
+    </div>
+    <div class="tt-row"><span>Inicio</span><span>Dia ${t.start}</span></div>
+    <div class="tt-row"><span>Fin</span><span>Dia ${t.end}</span></div>
+    <div class="tt-row"><span>Duracion</span><span>${dur} dia${dur>1?'s':''}</span></div>
+    ${t.end > DEAD ? `<div class="tt-row"><span>Excede deadline</span><span style="color:#DC2626">+${t.end - DEAD} dias</span></div>` : ''}
+    <hr class="tt-divider">
+    <div class="tt-deps-title">Depende de</div>
+    ${depItems}
+    <hr class="tt-divider">
+    <div class="tt-deps-title">Desbloquea</div>
+    ${unlockItems}
+  `;
+
+  positionTooltip(e);
+  tooltip.classList.add('visible');
+}
+
+function positionTooltip(e){
+  const tw = 280, th2 = 300;
+  let x = e.clientX + 14;
+  let y = e.clientY + 14;
+  if(x + tw > window.innerWidth - 10)  x = e.clientX - tw - 14;
+  if(y + th2 > window.innerHeight - 10) y = e.clientY - th2 - 14;
+  tooltip.style.left = x + 'px';
+  tooltip.style.top  = y + 'px';
+}
+
+function highlightTask(t){
+  // Clear previous
+  document.querySelectorAll('.task-row').forEach(r => {
+    r.classList.remove('highlighted', 'dep-highlighted');
+  });
+  // Highlight clicked task
+  if(rowByTaskId[t.id]) rowByTaskId[t.id].classList.add('highlighted');
+  // Highlight dependencies
+  t.deps.forEach(dep => {
+    if(rowByTaskId[dep]) rowByTaskId[dep].classList.add('dep-highlighted');
+  });
+  // Highlight tasks this unlocks
+  (unlockedBy[t.id] || []).forEach(uid => {
+    if(rowByTaskId[uid]) rowByTaskId[uid].classList.add('dep-highlighted');
+  });
+}
+
+// Close tooltip on outside click
+document.addEventListener('click', () => {
+  tooltip.classList.remove('visible');
+  activeTask = null;
+  document.querySelectorAll('.task-row').forEach(r => {
+    r.classList.remove('highlighted', 'dep-highlighted');
+  });
+});
+
+// FILTROS
+function setFilter(f){
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.f-' + f).classList.add('active');
+
+  rowMeta.forEach(r => {
+    if(r.isSec){ r.el.classList.remove('dimmed'); return; }
+    const show = f === 'all' ? true : f === 'crit' ? r.critical : r.team === f;
+    r.el.classList.toggle('dimmed', !show);
+  });
+
+  rowMeta.forEach(r => {
+    if(!r.isSec) return;
+    if(f === 'all' || f === 'crit'){ r.el.classList.remove('dimmed'); return; }
+    const sec   = r.el.dataset.section;
+    const match = (f === 'mkt' && sec === 'Marketing') ||
+                  (f === 'ven' && sec === 'Ventas')    ||
+                  (f === 'pro' && sec === 'Producto');
+    r.el.classList.toggle('dimmed', !match);
+  });
+}
+</script>
+</body>
+</html>

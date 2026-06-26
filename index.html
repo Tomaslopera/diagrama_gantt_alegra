@@ -63,6 +63,7 @@
   .mode-banner.dep   { background: rgba(239,68,68,0.07); border: 1px solid rgba(239,68,68,0.18); color: #B91C1C; }
   .mode-banner.prop  { background: rgba(16,185,129,0.07); border: 1px solid rgba(16,185,129,0.18); color: #065F46; }
   .mode-banner.block { background: rgba(124,58,237,0.07); border: 1px solid rgba(124,58,237,0.2); color: #4C1D95; }
+  .mode-banner.visible { display: flex; margin-bottom: 0; }
   .bdot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 
   .gantt-container { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
@@ -114,8 +115,8 @@
   td.bcell-empty { background: transparent; }
   td.bcell-empty.is-dead  { background: var(--dead-bg); border-left: 2px solid var(--dead-line); }
   td.bcell-empty.is-block { background: rgba(124,58,237,0.07); border-left: 2px solid rgba(124,58,237,0.35); }
-  td.bcell-bar { padding: 0; position: relative; vertical-align: middle; cursor: pointer; }
-  td.bcell-bar::before { content: ''; position: absolute; top: 9px; bottom: 9px; left: 0; right: 0; transition: filter 0.12s, top 0.1s, bottom 0.1s; }
+  td.bcell-bar { padding: 0; position: relative; vertical-align: middle; cursor: pointer; isolation: isolate; }
+  td.bcell-bar::before { content: ''; position: absolute; top: 9px; bottom: 9px; left: 0; right: 0; transition: filter 0.12s, top 0.1s, bottom 0.1s; z-index: 1; }
   td.bcell-bar:hover::before { top: 7px; bottom: 7px; filter: brightness(1.08); }
   td.bcell-bar.bar-start::before { border-radius: 4px 0 0 4px; left: 2px; }
   td.bcell-bar.bar-end::before   { border-radius: 0 4px 4px 0; right: 2px; }
@@ -130,6 +131,22 @@
   td.bcell-bar.bar-ov::before    { background: repeating-linear-gradient(-45deg, rgba(239,68,68,0.6), rgba(239,68,68,0.6) 3px, rgba(239,68,68,0.15) 3px, rgba(239,68,68,0.15) 7px); border-radius: 0 4px 4px 0; right: 2px; }
   td.bcell-bar.bar-ov-block::before { background: repeating-linear-gradient(-45deg, rgba(124,58,237,0.5), rgba(124,58,237,0.5) 3px, rgba(124,58,237,0.15) 3px, rgba(124,58,237,0.15) 7px); border-radius: 0 4px 4px 0; right: 2px; }
   td.bcell-bar.is-dead-bar  { border-left: 2px solid var(--dead-line); }
+  .past-dead-stripe { display: none; }
+  td.bcell-bar.past-dead::before { display: none !important; }
+  td.bcell-bar.past-dead::after {
+    content: '';
+    position: absolute;
+    top: 9px;
+    bottom: 9px;
+    left: 2px;
+    right: 2px;
+    border-radius: 4px;
+    background: repeating-linear-gradient(
+      -45deg,
+      rgba(239,68,68,0.6), rgba(239,68,68,0.6) 3px,
+      rgba(239,68,68,0.13) 3px, rgba(239,68,68,0.13) 7px
+    );
+  }
   td.bcell-bar.is-block-bar { border-left: 2px solid rgba(124,58,237,0.4); }
 
   #tooltip { position: fixed; background: var(--surface); border: 1px solid var(--border2); border-radius: 8px; padding: 12px 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.12); font-size: 12px; min-width: 215px; max-width: 295px; z-index: 1000; pointer-events: none; opacity: 0; transition: opacity 0.15s; }
@@ -150,18 +167,15 @@
   .tt-note.blue   { background: rgba(99,102,241,0.07); border: 1px solid rgba(99,102,241,0.2); color: #3730A3; }
   .tt-note.purple { background: rgba(124,58,237,0.07); border: 1px solid rgba(124,58,237,0.2); color: #4C1D95; }
 
-  .milestone-header { position: relative; height: 0; overflow: visible; margin-bottom: 0; }
-  .mh-item { position: absolute; display: flex; align-items: center; gap: 5px; transform: translateY(-100%); padding-bottom: 4px; }
-  .mh-line { width: 2px; height: 14px; flex-shrink: 0; }
-  .mh-line.m-review { background: #F59E0B; }
-  .mh-line.m-decide { background: #EF4444; }
-  .mh-line.m-report { background: #7C3AED; }
-  .mh-label { font-family: var(--mono); font-size: 9px; font-weight: 600; white-space: nowrap; padding: 2px 6px; border-radius: 3px; letter-spacing: 0.02em; }
+  /* milestone-header removed */
+  .mh-item { display: flex; align-items: center; gap: 4px; }
+  .mh-tick { width: 2px; height: 10px; flex-shrink: 0; }
+  .mh-label { font-family: var(--mono); font-size: 9px; font-weight: 600; white-space: nowrap; padding: 2px 6px; border-radius: 3px; letter-spacing: 0.02em; pointer-events: none; }
   .mh-label.m-review { color: #92400E; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); }
   .mh-label.m-decide { color: #B91C1C; background: rgba(239,68,68,0.10); border: 1px solid rgba(239,68,68,0.25); }
   .mh-label.m-report { color: #4C1D95; background: rgba(124,58,237,0.10); border: 1px solid rgba(124,58,237,0.25); }
-  .gantt-wrapper { position: relative; }
-  .milestone-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+  .gantt-wrapper { position: relative; overflow: visible; }
+  .milestone-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; z-index: 2; }
   .milestone-line { position: absolute; top: 0; bottom: 0; width: 0; border-left: 2px dashed; opacity: 0.7; }
   .milestone-line.m-review  { border-color: #F59E0B; }
   .milestone-line.m-decide  { border-color: #EF4444; }
@@ -170,19 +184,19 @@
   .milestone-label.m-review { color: #92400E; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); }
   .milestone-label.m-decide { color: #B91C1C; background: rgba(239,68,68,0.10); border: 1px solid rgba(239,68,68,0.25); }
   .milestone-label.m-report { color: #4C1D95; background: rgba(124,58,237,0.10); border: 1px solid rgba(124,58,237,0.25); }
-  .milestone-header { position: relative; height: 0; overflow: visible; margin-bottom: 0; }
-  .mh-item { position: absolute; display: flex; align-items: center; gap: 5px; transform: translateY(-100%); padding-bottom: 4px; }
-  .mh-line { width: 2px; height: 14px; flex-shrink: 0; }
-  .mh-line.m-review { background: #F59E0B; }
-  .mh-line.m-decide { background: #EF4444; }
-  .mh-line.m-report { background: #7C3AED; }
-  .mh-label { font-family: var(--mono); font-size: 9px; font-weight: 600; white-space: nowrap; padding: 2px 6px; border-radius: 3px; letter-spacing: 0.02em; }
+  /* milestone-header removed */
+  .mh-item { display: flex; align-items: center; gap: 4px; }
+  .mh-tick { width: 2px; height: 10px; flex-shrink: 0; }
+  .mh-label { font-family: var(--mono); font-size: 9px; font-weight: 600; white-space: nowrap; padding: 2px 6px; border-radius: 3px; letter-spacing: 0.02em; pointer-events: none; }
   .mh-label.m-review { color: #92400E; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); }
   .mh-label.m-decide { color: #B91C1C; background: rgba(239,68,68,0.10); border: 1px solid rgba(239,68,68,0.25); }
   .mh-label.m-report { color: #4C1D95; background: rgba(124,58,237,0.10); border: 1px solid rgba(124,58,237,0.25); }
-  .gantt-wrapper { position: relative; }
-  .milestone-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+  .gantt-wrapper { position: relative; overflow: visible; }
+  .milestone-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; z-index: 2; }
   .milestone-line { position: absolute; top: 0; bottom: 0; width: 0; border-left: 2px dashed; opacity: 0.75; }
+  .milestone-labels { position: relative; height: 26px; overflow: visible; pointer-events: none; }
+  .ml-wrap { position: absolute; display: flex; align-items: center; gap: 3px; white-space: nowrap; cursor: pointer; pointer-events: all; transition: opacity 0.12s; }
+  .ml-wrap:hover { opacity: 0.75; }
   .milestone-line.m-review { border-color: #F59E0B; }
   .milestone-line.m-decide { border-color: #EF4444; }
   .milestone-line.m-report { border-color: #7C3AED; }
@@ -190,6 +204,9 @@
   .milestone-label.m-review { color: #92400E; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); }
   .milestone-label.m-decide { color: #B91C1C; background: rgba(239,68,68,0.10); border: 1px solid rgba(239,68,68,0.25); }
   .milestone-label.m-report { color: #4C1D95; background: rgba(124,58,237,0.10); border: 1px solid rgba(124,58,237,0.25); }
+
+  .milestone-row td.ml-label-col { width: 230px; }
+
   .insight-row { margin-top: 14px; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
   .icard { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 13px 15px; transition: border-color 0.2s; }
   .icard.green-card  { border-color: rgba(16,185,129,0.3); }
@@ -263,15 +280,15 @@
   <span>Día 8: T1 se retrasa 6 días (termina día 16). Impacto en cadena sobre 6 tareas — entrega se mueve de <strong>día 32</strong> a <strong>día 35</strong></span>
 </div>
 
+<div class="milestone-labels" id="milestone-labels"></div>
 <div class="gantt-wrapper" id="gantt-wrapper">
-<div class="milestone-header" id="milestone-header"></div>
 <div class="gantt-wrapper" id="gantt-wrapper">
 <div class="gantt-container">
-  <div class="gantt-scroll" id="gantt-scroll">
+  <div class="gantt-scroll" id="gantt-scroll" style="position:relative">
     <table id="gtable"></table>
+    <div class="milestone-overlay" id="milestone-overlay"></div>
   </div>
 </div>
-<div class="milestone-overlay" id="milestone-overlay"></div>
 </div>
 <div class="milestone-overlay" id="milestone-overlay"></div>
 </div>
@@ -355,10 +372,25 @@ const blockScenario = {
   C:   { start:17, end:23, note:'Desplazada +6 días por retraso de T1.' },
   B:   { start:22, end:26, note:'Desplazada +6 días. Depende de T2, que a su vez depende de T1.' },
   IV:  { start:17, end:19, note:'Desplazada +6 días por retraso de T1.' },
-  I:   { start:17, end:26, note:'Desplazada +6 días por retraso de T1. Impacto crítico: bloquea toda la cadena de Producto.' },
-  II:  { start:27, end:28, note:'Desplazada +6 días por retraso en cadena de I.' },
-  III: { start:29, end:33, note:'Desplazada +6 días. Excede el deadline del día 30.' },
-  V:   { start:34, end:35, note:'Entrega final: día 35. Desviación total de +5 días sobre el plazo pactado.' },
+  I:   { start:17, end:26, note:'Desplazada +6 días. Solapamientos de la propuesta se mantienen pero el retraso en T1 corre toda la cadena.' },
+  II:  { start:26, end:27, note:'Solapamiento 1 día con I aplicado. Aun así se desplaza al día 26-27.' },
+  III: { start:27, end:31, note:'Solapamiento 1 día con II aplicado. Excede el deadline del día 30.' },
+  V:   { start:31, end:35, note:'Solapamiento 1 día con III aplicado. Entrega día 35 — desviación de +5 días sobre el plazo.' },
+};
+
+// Gestión del bloqueo: Opción A (I arranca día 12 con borrador) + solapamientos
+// Resultado: entrega día 30, recupera los 5 días de retraso completamente
+const blockMgmt = {
+  T1:  { start:1,  end:16, note:'Tarea origen del bloqueo. Termina el día 16 con 6 días de retraso. El borrador de mensajes disponible el día 12 permite desbloquear anticipadamente la creación de prototipos, activando la Opción A de gestión.' },
+  I:   { start:12, end:21, note:'Acción clave de la gestión: arranca el día 12 con el borrador de mensajes en lugar de esperar al día 17. Esto recupera 5 días frente al bloqueo puro. El equipo asume el riesgo de ajustes menores si los mensajes cambian, pero acota ese riesgo con la revisión del día 16.' },
+  II:  { start:21, end:22, note:'Aprobación y ajustes con solapamiento de 1 día sobre I. La aprobación inicia cuando el prototipo está al 90%, permitiendo ajustes finales en paralelo con el cierre de I. Técnica ya aplicada en la propuesta base de 29 días.' },
+  III: { start:22, end:26, note:'Desarrollo arranca con solapamiento de 1 día sobre II. El equipo de desarrollo puede iniciar con la aprobación en curso sobre los módulos ya validados. Misma lógica de trabajo en etapas progresivas.' },
+  V:   { start:26, end:30, note:'QA y lanzamiento con solapamiento de 1 día sobre III. Entrega exacta en día 30 — se recuperan los 5 días de retraso de T1 completamente. La combinación de Opción A + solapamientos neutraliza el bloqueo sin cambiar duraciones ni reasignar recursos.' },
+  T2:  { start:17, end:21, note:'Depende de T1 versión final (día 16). No se puede adelantar porque el diseño de assets requiere los mensajes aprobados definitivamente. Arranca día 17, 6 días después de lo planeado originalmente.' },
+  A:   { start:17, end:19, note:'Depende de T1 versión final (día 16). El playbook de ventas requiere los mensajes clave finales para ser actualizado correctamente. Arranca día 17.' },
+  C:   { start:17, end:23, note:'Depende de T1 versión final (día 16). El entrenamiento comercial usa el playbook actualizado (A), por lo que tampoco puede adelantarse. Arranca día 17 con 6 días de retraso.' },
+  IV:  { start:17, end:19, note:'Depende de T1 versión final (día 16). La documentación de cambios requiere los mensajes finales aprobados para ser precisa. Arranca día 17.' },
+  B:   { start:22, end:26, note:'Depende de T2 (que termina día 21). Las propuestas comerciales necesitan el diseño de assets actualizado. Arranca día 22, sin posibilidad de adelanto adicional.' },
 };
 
 const taskById = {};
@@ -411,7 +443,8 @@ table.appendChild(tbody);
 
 function buildBars(tr, s, e, color, t, isBlock, showDeadline){
   while(tr.cells.length>1) tr.deleteCell(1);
-  const cross = e>DEAD;
+  const cross = e>DEAD && s<=DEAD;  // bar straddles deadline
+  const pastDead = s>DEAD;           // bar is entirely past deadline
   const blockLine = isBlock ? BLOCK_DAY : null;
 
   function emptyCell(span, deadCol, blockCol){
@@ -427,6 +460,12 @@ function buildBars(tr, s, e, color, t, isBlock, showDeadline){
     td.colSpan=span; td.className='bcell-bar '+cls;
     if(!isBlock && s2<=DEAD && e2>=DEAD) td.classList.add('is-dead-bar');
     if(isBlock && s2<=BLOCK_DAY && e2>=BLOCK_DAY) td.classList.add('is-block-bar');
+    // Inject stripe div for past-deadline bars
+    if(cls.includes('past-dead')){
+      const stripe = document.createElement('div');
+      stripe.className = 'past-dead-stripe';
+      td.appendChild(stripe);
+    }
     td.addEventListener('click',ev=>{ev.stopPropagation();showTT(taskRef,ev);highlightTask(taskRef);});
     tr.appendChild(td);
   }
@@ -448,6 +487,10 @@ function buildBars(tr, s, e, color, t, isBlock, showDeadline){
     const sp1=DEAD-s+1, sp2=e-DEAD;
     if(sp1>0) barCell(sp1, color+' '+(sp1===1?'bar-solo':'bar-start'), t, s, DEAD);
     if(sp2>0) barCell(sp2, 'bar-ov bar-end', t, DEAD+1, e);
+  } else if(pastDead){
+    // Bar entirely past deadline — show with past-deadline stripe
+    const sp=e-s+1;
+    barCell(sp, color+' '+(sp===1?'bar-solo':'bar-start bar-end')+' past-dead', t, s, e);
   } else {
     const sp=e-s+1;
     barCell(sp, color+' '+(sp===1?'bar-solo':'bar-start bar-end'), t, s, e);
@@ -466,6 +509,23 @@ function buildBars(tr, s, e, color, t, isBlock, showDeadline){
   }
 }
 
+function showMilestoneTT(m, ev){
+  const clrMap2 = { 'm-review':'#F59E0B', 'm-decide':'#EF4444', 'm-report':'#7C3AED' };
+  const c2 = clrMap2[m.cls];
+  ttEl.innerHTML = `
+    <div class="tt-title">${m.ttTitle}</div>
+    <span class="tt-badge" style="background:${c2}22;color:${c2};border:1px solid ${c2}44">Día ${m.day} — Hito de gestión</span>
+    <hr class="tt-div">
+    <div style="font-size:12px;color:var(--text);line-height:1.5;">${m.ttBody}</div>
+  `;
+  let x = ev.clientX + 14, y = ev.clientY + 14;
+  if(x + 295 > window.innerWidth  - 10) x = ev.clientX - 295 - 14;
+  if(y + 180 > window.innerHeight - 10) y = ev.clientY - 180 - 14;
+  ttEl.style.left = x + 'px';
+  ttEl.style.top  = y + 'px';
+  ttEl.classList.add('visible');
+}
+
 const ttEl = document.getElementById('tooltip');
 function showTT(t, ev){
   const isFixed  = mode==='dep' && depView==='fixed';
@@ -473,7 +533,8 @@ function showTT(t, ev){
   const isBlock  = mode==='block';
   const fixData  = depFixed[t.id];
   const propData = proposal[t.id];
-  const blkData  = blockScenario[t.id];
+  const isMgmtTT = mode==='block' && blockView==='mgmt';
+  const blkData  = isMgmtTT ? (blockMgmt[t.id] || blockScenario[t.id]) : blockScenario[t.id];
 
   const useStart = isProp&&propData ? propData.start : isFixed&&fixData ? fixData.start : isBlock&&blkData ? blkData.start : t.start;
   const useEnd   = isProp&&propData ? propData.end   : isFixed&&fixData ? fixData.end   : isBlock&&blkData ? blkData.end   : t.end;
@@ -494,7 +555,9 @@ function showTT(t, ev){
 
   let noteHtml='';
   if(isBlock && blkData){
-    noteHtml=`<div class="tt-note purple"><strong>Impacto del bloqueo:</strong> ${blkData.note}</div>`;
+    const noteLabel = isMgmtTT ? 'Gestión aplicada' : 'Impacto del bloqueo';
+    const noteCls   = isMgmtTT ? 'green' : 'purple';
+    noteHtml=`<div class="tt-note ${noteCls}"><strong>${noteLabel}:</strong> ${blkData.note}</div>`;
   } else if(mode==='dep' && depView==='current' && depIssues[t.id]){
     const iss=depIssues[t.id];
     const cls=iss.type==='unnecessary'?'red':iss.type==='coord'?'blue':'amber';
@@ -508,7 +571,7 @@ function showTT(t, ev){
 
   ttEl.innerHTML=`
     <div class="tt-title">${t.label}</div>
-    <span class="tt-badge" style="background:${c}22;color:${c};border:1px solid ${c}44">${t.crítical?'Ruta crítica':TL[t.team]}</span>
+    <span class="tt-badge" style="background:${c}22;color:${c};border:1px solid ${c}44">${isMgmtTT && blkData ? (t.id==='T1' ? 'Retraso origen' : ['I','II','III','V'].includes(t.id) ? 'Gestionada' : 'Impactada') : t.crítical ? 'Ruta crítica' : TL[t.team]}</span>
     <div class="tt-row"><span>Inicio</span><span>Día ${useStart}</span></div>
     <div class="tt-row"><span>Fin</span><span>Día ${useEnd}</span></div>
     <div class="tt-row"><span>Duración</span><span>${dur} día${dur>1?'s':''}</span></div>
@@ -549,15 +612,18 @@ function renderRows(){
     r.el.classList.remove('issue-unnecessary','issue-missing','issue-fixed','prop-changed','block-shifted','block-origin');
 
     if(mode==='block'){
-      const blk=blockScenario[t.id];
-      const showDead = blockView==='impact';
+      const isMgmt  = blockView==='mgmt';
+      const blk     = isMgmt ? (blockMgmt[t.id] || blockScenario[t.id]) : blockScenario[t.id];
+      const showDead = true; // always show deadline column in block mode
       if(blk){
-        const isOrigin = t.id==='T1';
-        r.el.classList.add(isOrigin?'block-origin':'block-shifted');
-        const tagTxt = isOrigin ? 'retraso origen' : 'impacto';
-        if(tnEl) tnEl.innerHTML=`${t.label}${critBadge}<span class="itag blk">${tagTxt}</span>`;
-        if(tmEl) tmEl.innerHTML=`D${blk.start}–D${blk.end} &middot; <span style="color:#6D28D9;font-weight:500">desplazada</span>`;
-        buildBars(r.el, blk.start, blk.end, isOrigin?'bar-mkt':'bar-block', t, true, showDead);
+        const isOrigin  = t.id==='T1';
+        const isMgmtFix = isMgmt && blockMgmt[t.id] && !isOrigin;
+        const colorBar  = isOrigin ? 'bar-mkt' : (isMgmtFix && (t.id==='I'||t.id==='II'||t.id==='III'||t.id==='V') ? 'bar-prop' : 'bar-block');
+        r.el.classList.add(isOrigin ? 'block-origin' : (isMgmtFix && colorBar==='bar-prop' ? 'prop-changed' : 'block-shifted'));
+        const tagTxt = isOrigin ? 'retraso origen' : (colorBar==='bar-prop' ? 'gestionada' : 'impacto');
+        if(tnEl) tnEl.innerHTML=`${t.label}${critBadge}<span class="itag ${colorBar==='bar-prop'?'fix':'blk'}">${tagTxt}</span>`;
+        if(tmEl) tmEl.innerHTML=`D${blk.start}–D${blk.end} &middot; <span style="color:${colorBar==='bar-prop'?'#059669':'#6D28D9'};font-weight:500">${colorBar==='bar-prop'?'gestionada':'desplazada'}</span>`;
+        buildBars(r.el, blk.start, blk.end, colorBar, t, true, showDead);
       } else {
         if(tnEl) tnEl.innerHTML=`${t.label}${critBadge}`;
         if(tmEl) tmEl.innerHTML=`D${t.start}–D${t.end} &middot; ${t.deps.length?'dep. '+t.deps.join(', '):'sin dependencia'}`;
@@ -644,13 +710,23 @@ function updateCards(){
     fourth.innerHTML='<div class="ilbl">Ajustes aplicados</div><div class="ival vgreen">3 tareas</div><div class="isub">II, III y V solapadas 1 día c/u</div>';
     chain.textContent='T1→I→II→III→V (día 29)';
   } else if(mode==='block'){
-    durEl.textContent='35 días'; durEl.className='ival vpurple';
-    subEl.textContent='5 días sobre el plazo pactado';
-    pd.textContent='Entrega con bloqueo: día 35'; pd.style.cssText='background:rgba(124,58,237,0.09);color:#4C1D95;border:1px solid rgba(124,58,237,0.25)';
-    pv.textContent='Desviación: +5 días'; pv.style.cssText='background:rgba(239,68,68,0.09);color:#B91C1C;border:1px solid rgba(239,68,68,0.22)';
-    fourth.classList.remove('green-card'); fourth.classList.add('purple-card');
-    fourth.innerHTML='<div class="ilbl">Tareas afectadas</div><div class="ival vpurple">10 tareas</div><div class="isub">T1 retrasa 6 días, impacta toda la cadena</div>';
-    chain.textContent='T1→I→II→III→V (día 35)';
+    if(blockView==='mgmt'){
+      durEl.textContent='30 días'; durEl.className='ival vgreen';
+      subEl.textContent='Recuperación total con Opción A + solapamientos';
+      pd.textContent='Entrega gestionada: día 30'; pd.style.cssText='background:rgba(16,185,129,0.09);color:#065F46;border:1px solid rgba(16,185,129,0.25)';
+      pv.textContent='Sin desviación'; pv.style.cssText='background:rgba(29,187,172,0.09);color:#0F8078;border:1px solid rgba(29,187,172,0.28)';
+      fourth.classList.remove('purple-card'); fourth.classList.add('green-card');
+      fourth.innerHTML='<div class="ilbl">Tareas gestionadas</div><div class="ival vgreen">5 tareas</div><div class="isub">I arranca día 12, solapamiento en II, III y V</div>';
+      chain.textContent='T1→I→II→III→V (día 30 gestionado)';
+    } else {
+      durEl.textContent='35 días'; durEl.className='ival vpurple';
+      subEl.textContent='5 días sobre el plazo pactado';
+      pd.textContent='Entrega con bloqueo: día 35'; pd.style.cssText='background:rgba(124,58,237,0.09);color:#4C1D95;border:1px solid rgba(124,58,237,0.25)';
+      pv.textContent='Desviación: +5 días'; pv.style.cssText='background:rgba(239,68,68,0.09);color:#B91C1C;border:1px solid rgba(239,68,68,0.22)';
+      fourth.classList.remove('green-card'); fourth.classList.add('purple-card');
+      fourth.innerHTML='<div class="ilbl">Tareas afectadas</div><div class="ival vpurple">10 tareas</div><div class="isub">T1 retrasa 6 días, impacta toda la cadena</div>';
+      chain.textContent='T1→I→II→III→V (día 35)';
+    }
   } else {
     durEl.textContent='32 días'; durEl.className='ival vred';
     subEl.textContent='2 días sobre el plazo';
@@ -697,65 +773,99 @@ function setBlockView(v){
     banner.innerHTML='<span class="bdot" style="background:#7C3AED"></span><span>Gestión activa: revisión día 12 con borrador → decisión día 16 con mensajes finales → informe día 23 para evaluar ampliación del plazo</span>';
   }
   clearMilestones();
-  renderRows(); applyVisibility();
+  renderRows(); applyVisibility(); updateCards();
   if(mode==='block') drawMilestones();
 }
 
-function getLabelWidth(){ return 230; }
-function getCellWidth(){ return 24; }
-
 function getDayX(day){
-  const labelW = getLabelWidth();
-  const cellW  = getCellWidth();
-  return labelW + (day - 1) * cellW + cellW / 2;
+  // Find the actual rendered position of the day cell in the thead
+  const headerRow = document.querySelector('#gtable thead tr:last-child');
+  if(headerRow && headerRow.cells[day]){
+    const cell = headerRow.cells[day];
+    const scroll = document.getElementById('gantt-scroll');
+    return cell.offsetLeft + cell.offsetWidth / 2;
+  }
+  // Fallback
+  const thLabel = document.querySelector('#gtable thead th.th-label');
+  const labelW  = thLabel ? thLabel.offsetWidth : 230;
+  return labelW + (day - 1) * 24 + 12;
 }
 
 function clearMilestones(){
   document.getElementById('milestone-overlay').innerHTML = '';
-  const h = document.getElementById('milestone-header');
-  if(h){ h.innerHTML = ''; h.style.height = '0'; }
+  document.getElementById('milestone-labels').innerHTML  = '';
+  const r = document.getElementById('milestone-thead-row');
+  if(r) r.remove();
 }
 
 function drawMilestones(){
   if(blockView !== 'mgmt') return;
-  const header     = document.getElementById('milestone-header');
-  const scroll     = document.getElementById('gantt-scroll');
-  const scrollLeft = scroll.scrollLeft;
-  header.innerHTML = '';
+
+  const existing = document.getElementById('milestone-thead-row');
+  if(existing) existing.remove();
+  document.getElementById('milestone-overlay').innerHTML = '';
+  document.getElementById('milestone-labels').innerHTML  = '';
 
   const milestones = [
-    { day:12, cls:'m-review', label:'Día 12 — Revisión con borrador',         row: 0 },
-    { day:16, cls:'m-decide', label:'Día 16 — Decisión con mensajes finales',  row: 1 },
-    { day:23, cls:'m-report', label:'Día 23 — Informe de avance y evaluación', row: 0 },
+    { day:12, cls:'m-review', label:'Día 12', row: 1,
+      ttTitle: 'Revisión con borrador',
+      ttBody:  'Marketing presenta un borrador de mensajes clave. Producto arranca la Creación de prototipos (I) con este insumo preliminar, recuperando 5 días frente al escenario de bloqueo puro.' },
+    { day:16, cls:'m-decide', label:'Día 16', row: 0,
+      ttTitle: 'Decisión con mensajes finales',
+      ttBody:  'T1 termina. Con los mensajes clave aprobados se confirma el cronograma y se notifica al equipo de entrega final sobre el retraso original y el estado de recuperación.' },
+    { day:23, cls:'m-report', label:'Día 23', row: 1,
+      ttTitle: 'Informe de avance y evaluación de plazo',
+      ttBody:  'Al día 23, Desarrollo (III) lleva 2 de 5 días completados (~40%). Umbral de decisión: si el avance es menor al 60%, se activa la conversación de ampliación de plazo con stakeholders. Por debajo del umbral, V (QA) no puede arrancar a tiempo para cumplir el día 30 y se pacta formalmente la extensión a día 35. Por encima del umbral, se confirma la entrega en día 30 y se mantiene el plan.' },
   ];
 
-  const rowH = 22;
-  const totalRows = 2;
-  header.style.height = (totalRows * rowH + 6) + 'px';
+  const clrMap   = { 'm-review':'#F59E0B', 'm-decide':'#EF4444', 'm-report':'#7C3AED' };
+  const overlay  = document.getElementById('milestone-overlay');
+  const labelDiv = document.getElementById('milestone-labels');
+  const scroll   = document.getElementById('gantt-scroll');
+
+  // Read positions from rendered day header cells
+  const headerCells = document.querySelectorAll('#gtable thead tr th.th-day');
 
   milestones.forEach(m => {
-    const x = getDayX(m.day) - scrollLeft;
-    const item = document.createElement('div');
-    item.className = 'mh-item';
-    item.style.left   = x + 'px';
-    item.style.bottom = (m.row * rowH) + 'px';
-    item.style.transform = 'none';
-    item.style.position = 'absolute';
+    const cell = headerCells[m.day - 1];
+    if(!cell) return;
 
-    const line = document.createElement('div');
-    line.className = 'mh-line ' + m.cls;
+    // x relative to gantt-scroll content (for overlay lines)
+    const xInScroll = cell.offsetLeft + cell.offsetWidth / 2;
+
+    // x relative to viewport minus scroll container offset (for label div)
+    const scrollRect = scroll.getBoundingClientRect();
+    const cellRect   = cell.getBoundingClientRect();
+    const xInLabel   = cellRect.left - scrollRect.left + cell.offsetWidth / 2 + scroll.scrollLeft;
+
+    // Label in dedicated container
+    const wrap = document.createElement('div');
+    wrap.className = 'ml-wrap';
+    wrap.style.left = xInLabel + 'px';
+    wrap.style.top  = (m.row === 0 ? '4px' : '4px');
+    wrap.addEventListener('click', function(ev){
+      ev.stopPropagation();
+      showMilestoneTT(m, ev);
+    });
+
+    const tick = document.createElement('div');
+    tick.style.cssText = 'width:2px;height:11px;flex-shrink:0;background:' + clrMap[m.cls] + ';';
 
     const lbl = document.createElement('div');
     lbl.className = 'mh-label ' + m.cls;
     lbl.textContent = m.label;
 
-    item.appendChild(line);
-    item.appendChild(lbl);
-    header.appendChild(item);
+    wrap.appendChild(tick);
+    wrap.appendChild(lbl);
+    labelDiv.appendChild(wrap);
+
+    // Dashed line inside overlay (scroll-relative)
+    const dline = document.createElement('div');
+    dline.className = 'milestone-line ' + m.cls;
+    dline.style.left = xInScroll + 'px';
+    overlay.appendChild(dline);
   });
 }
-
-
 
 function setDepView(v){
   depView=v;
@@ -769,18 +879,10 @@ function setDepView(v){
 }
 
 window.addEventListener('scroll', () => { if(mode==='block') { clearMilestones(); drawMilestones(); } }, true);
+// Overlay is inside gantt-scroll — no scroll listener needed for milestones
+// milestone-header inside gantt-scroll — no sync needed
 document.getElementById('gantt-scroll').addEventListener('scroll', function(){
-  if(mode==='block' && blockView==='mgmt'){
-    const header = document.getElementById('milestone-header');
-    const scroll = document.getElementById('gantt-scroll');
-    const scrollLeft = scroll.scrollLeft;
-    header.querySelectorAll('.mh-item').forEach((item, i) => {
-      const milestones = [
-        { day:12 }, { day:16 }, { day:23 }
-      ];
-      if(milestones[i]) item.style.left = (getDayX(milestones[i].day) - scrollLeft) + 'px';
-    });
-  }
+  if(mode === 'block' && blockView === 'mgmt') drawMilestones();
 });
 </script>
 </body>
